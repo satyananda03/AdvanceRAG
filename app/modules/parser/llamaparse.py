@@ -92,8 +92,12 @@ def reconstruct_content_list(data: dict, output_file: str = "formatted_parsing_r
         valid_images_by_page[page_num].append({
             "url": img.get("presigned_url"),
             "y": bbox.get("y", 0),
+            "x": bbox.get("x", 0),  # Tambahan x untuk pencocokan bbox
             "is_chart": is_chart
         })
+
+    # Dictionary untuk menyimpan data item ber-label "chart" agar bisa dicocokkan dengan gambar
+    chart_items_by_page = {}
 
     # Iterasi setiap halaman
     for page_data in data.get("items", {}).get("pages", []):
@@ -127,15 +131,36 @@ def reconstruct_content_list(data: dict, output_file: str = "formatted_parsing_r
                         "html": item.get("html", ""),
                         "y": y_coord
                     })
+                else:
+                    # Simpan data chart (bbox & md) untuk dicocokkan dengan gambar
+                    if page_num not in chart_items_by_page:
+                        chart_items_by_page[page_num] = []
+                    chart_items_by_page[page_num].append({
+                        "bbox": bbox_list[0],
+                        "md": item.get("md", "")
+                    })
             
         # Tambahkan gambar Chart
         if page_num in valid_images_by_page:
             for v_img in valid_images_by_page[page_num]:
+                img_y = v_img["y"]
+                img_x = v_img["x"]
+                
+                chart_md = None
+                # Cocokkan item chart dengan gambar berdasarkan koordinat x dan y (toleransi 10px)
+                if page_num in chart_items_by_page:
+                    for chart_item in chart_items_by_page[page_num]:
+                        c_bbox = chart_item["bbox"]
+                        if abs(c_bbox.get("x", 0) - img_x) < 10 and abs(c_bbox.get("y", 0) - img_y) < 10:
+                            chart_md = chart_item["md"]
+                            break
+                
                 page_elements.append({
                     "type": "image",
                     "url": v_img["url"],
-                    "y": v_img["y"],
-                    "is_chart": v_img["is_chart"]
+                    "y": img_y,
+                    "is_chart": v_img["is_chart"],
+                    "chart_data": chart_md
                 })
                 
         # Sortir berdasarkan Y (atas ke bawah)
@@ -217,6 +242,10 @@ def reconstruct_content_list(data: dict, output_file: str = "formatted_parsing_r
                     if next_elem["type"] == "text":
                         first_sent = get_first_sentence(next_elem["text"])
                         if first_sent: image_caption.append(first_sent) # Masukkan ke caption untuk image
+                
+                # Sisipkan hasil items ber label "chart" (chart_data) ke caption
+                if elem.get("chart_data"):
+                    image_caption.append(elem["chart_data"])
                 
                 content_list.append({
                     "type": "image",

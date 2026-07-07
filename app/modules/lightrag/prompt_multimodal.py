@@ -48,7 +48,6 @@ IMAGE_TYPE_ENUM: tuple[str, ...] = (
 
 IMAGE_TYPE_FALLBACK = "Other"
 
-
 _TABLE_FORMAT_LABELS: dict[str, str] = {
     "html": (
         "HTML format — a <table> fragment where merged cells use "

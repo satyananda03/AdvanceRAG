@@ -969,19 +969,22 @@ class ImageModalProcessor(BaseModalProcessor):
             # Parse response (reuse existing logic)
             enhanced_caption, entity_info = self._parse_response(response, entity_name)
 
+            print("\n" + "="*70)
+            print(f"🖼️  IMAGE PROCESSING RESULT")
+            print(f"  entity_name : {entity_info['entity_name']}")
+            print(f"  entity_type : {entity_info['entity_type']}")
+            print(f"  summary     : {entity_info['summary']}")
+            print(f"  img_path    : {image_path}")
+            print(f"  captions    : {captions}")
+            print(f"─"*70)
+            print(f"  CHUNK yang akan disimpan:")
+            print(enhanced_caption)
+            print("="*70 + "\n")
+
             return enhanced_caption, entity_info
 
         except Exception as e:
             logger.error(f"Error generating image description: {e}")
-            # Fallback: emit clean placeholder text instead of the raw
-            # stringified modal_content dict. Dumping the raw dict into the
-            # chunk (via image_chunk template's `enhanced_caption` slot) and
-            # into the entity summary polluted the graph in two ways:
-            #   1) the placeholder entity's description carried the raw dict
-            #   2) extract_entities running on that chunk pulled additional
-            #      noise entities (image_20.jpg, tmp path fragments, etc.)
-            # Preserve any structured metadata already parsed from the
-            # content_list item so the placeholder still carries useful signal.
             content_data = modal_content if isinstance(modal_content, dict) else {}
             captions = content_data.get(
                 "image_caption", content_data.get("img_caption", [])
@@ -1055,17 +1058,6 @@ class ImageModalProcessor(BaseModalProcessor):
                 footnotes=", ".join(footnotes) if footnotes else "None",
                 enhanced_caption=enhanced_caption,
             )
-            print("\n" + "="*70)
-            print(f"🖼️  IMAGE PROCESSING RESULT")
-            print(f"  entity_name : {entity_info['entity_name']}")
-            print(f"  entity_type : {entity_info['entity_type']}")
-            print(f"  summary     : {entity_info['summary']}")
-            print(f"  img_path    : {image_path}")
-            print(f"  captions    : {captions}")
-            print(f"─"*70)
-            print(f"  CHUNK yang akan disimpan:")
-            print(modal_chunk)
-            print("="*70 + "\n")
             return await self._create_entity_and_chunk(
                 modal_chunk,
                 entity_info,
@@ -1205,7 +1197,19 @@ class TableModalProcessor(BaseModalProcessor):
             enhanced_caption, entity_info = self._parse_table_response(
                 response, entity_name
             )
-
+            print("\n" + "="*70)
+            print(f"📊  TABLE PROCESSING RESULT")
+            print(f"  entity_name  : {entity_info['entity_name']}")
+            print(f"  entity_type  : {entity_info['entity_type']}")
+            print(f"  summary      : {entity_info['summary']}")
+            print(f"  caption      : {table_caption}")
+            print(f"─"*70)
+            print(f"  table_body (dikirim ke LLM):")
+            print(table_body[:500])  # preview
+            print(f"─"*70)
+            print(f"  CHUNK yang akan disimpan (LLM analysis):")
+            print(enhanced_caption)
+            print("="*70 + "\n")
             return enhanced_caption, entity_info
 
         except Exception as e:
@@ -1278,19 +1282,6 @@ class TableModalProcessor(BaseModalProcessor):
                 table_footnote=", ".join(table_footnote) if table_footnote else "None",
                 enhanced_caption=enhanced_caption,
             )
-            print("\n" + "="*70)
-            print(f"📊  TABLE PROCESSING RESULT")
-            print(f"  entity_name  : {entity_info['entity_name']}")
-            print(f"  entity_type  : {entity_info['entity_type']}")
-            print(f"  summary      : {entity_info['summary']}")
-            print(f"  caption      : {table_caption}")
-            print(f"─"*70)
-            print(f"  table_body (dikirim ke LLM):")
-            print(table_body[:500])  # preview
-            print(f"─"*70)
-            print(f"  CHUNK yang akan disimpan (LLM analysis):")
-            print(modal_chunk)
-            print("="*70 + "\n")
             return await self._create_entity_and_chunk(
                 modal_chunk,
                 entity_info,

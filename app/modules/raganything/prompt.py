@@ -66,68 +66,81 @@ PROMPTS = PromptRegistry()
 
 # System prompts for different analysis types
 PROMPTS["IMAGE_ANALYSIS_SYSTEM"] = (
-    "You are an expert image analyst. You ALWAYS respond with a valid JSON object only. "
+    "ROLE : You are an expert image analyst. You ALWAYS respond with a valid JSON object only. "
     "Never include text outside the JSON. Never use markdown code blocks. "
     "Your response MUST contain 'detailed_description' and 'entity_info' keys."
 )
 PROMPTS["IMAGE_ANALYSIS_FALLBACK_SYSTEM"] = (
-    "You are an expert image analyst. You ALWAYS respond with a valid JSON object only. "
+    "ROLE : You are an expert image analyst. You ALWAYS respond with a valid JSON object only. "
     "Never include text outside the JSON. Never use markdown code blocks. "
     "Your response MUST contain 'detailed_description' and 'entity_info' keys."
 )
 PROMPTS["TABLE_ANALYSIS_SYSTEM"] = (
-    "You are an expert data analyst. Provide detailed table analysis with specific insights."
+    "ROLE : You are an expert data analyst. Provide detailed table analysis with specific insights."
 )
 PROMPTS["EQUATION_ANALYSIS_SYSTEM"] = (
-    "You are an expert mathematician. Provide detailed mathematical analysis."
+    "ROLE : You are an expert mathematician. Provide detailed mathematical analysis."
 )
 PROMPTS["GENERIC_ANALYSIS_SYSTEM"] = (
-    "You are an expert content analyst specializing in {content_type} content."
+    "ROLE : You are an expert content analyst specializing in {content_type} content."
 )
 
 # Image analysis prompt template
-PROMPTS[
-    "vision_prompt"
-] = """You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, markdown, preamble, or text outside the JSON. Do NOT wrap the JSON in code blocks.
+PROMPTS["vision_prompt"] = """
+You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, markdown, preamble, or text outside the JSON. Do NOT wrap the JSON in code blocks.
 
-Your response MUST contain EXACTLY these two top-level keys: "detailed_description" and "entity_info". Any response missing either key is invalid and will cause a processing error.
+<instructions>
+1. CONTENT RECOGNITION & ADAPTABILITY
+   Examine the image carefully. Identify its implicit type (e.g., Photo, Chart, Screenshot, Diagram, Flowchart, Infographic) and adapt your analysis:
+   - For Charts/Diagrams: Identify axes, labels, legends, and extract specific quantitative data points/trends.
+   - For Screenshots/Interfaces: Identify layout, main functional components, and visible text.
+   - For Photos/Illustrations: Identify the primary subject, scene, spatial layout, and relationships between elements.
 
-Required JSON structure:
-{{
-    "detailed_description": "A comprehensive and detailed visual description of the image following these guidelines:
-    - Describe the overall composition and layout
-    - Identify all objects, people, text, and visual elements
-    - Explain relationships between elements
-    - Note colors, lighting, and visual style
-    - Describe any actions or activities shown
-    - Include technical details if relevant (charts, diagrams, etc.)
-    - Always use specific names instead of pronouns
-    - This field MUST NOT be empty or null",
-    "entity_info": {{
-        "entity_name": "{entity_name}",
-        "entity_type": "image",
-        "summary": "concise summary of the image content and its significance (max 100 words). This field MUST NOT be empty or null."
-    }}
-}}
+2. USE OF ADDITIONAL CONTEXT
+   You are provided with contextual metadata (Section Path, Image Path, Captions, Footnotes).
+   - Use this context to disambiguate acronyms, abbreviations, units, and entities.
+   - STRICT RULE: The IMAGE ITSELF takes absolute priority. Describe only what is visually verifiable. Do NOT use the context to invent or assume visual elements that are not present in the image.
 
-Additional context:
+3. DETAILED DESCRIPTION (`detailed_description`)
+   - Write a comprehensive, natural prose description (do NOT use bullet points).
+   - Cover overall composition, visual style, colors, lighting, actions, and meaningful relationships between elements.
+   - This field MUST NOT be empty or null.
+
+4. ENTITY INFO (`entity_info`)
+   - `entity_name`: Generate a clean, semantic, and distinctive title (3–8 words, snake_case preferred) representing the image content. Do NOT return raw file names or generic figure numbers (like `figure_30_1`) unless that is the literal title written on the image.
+   - `entity_type`: MUST be strictly hardcoded as "image".
+   - `summary`: Write a concise summary of the image content and its core significance (MAX 100 words). This field MUST NOT be empty or null.
+
+5. JSON OUTPUT & ESCAPING RULES
+   - Output EXACTLY ONE valid JSON object matching the structure below.
+   - All string values must be properly escaped JSON strings: escape double quotes as \\", backslashes as \\\\, and newlines as \\n.
+</instructions>
+
+<context>
+ADDITIONAL CONTEXT :
 - Section Path: {section_path}
 - Image Path: {image_path}
 - Captions: {captions}
 - Footnotes: {footnotes}
+</context>
 
-STRICT RULES:
-1. Output ONLY the JSON object — no other text before or after.
-2. Both "detailed_description" and "entity_info" are REQUIRED and MUST have non-empty values.
-3. "entity_info" MUST contain all three keys: "entity_name", "entity_type", and "summary".
-4. Use a semantic entity_name; do not return file names or figure numbers such as figure_30_1 unless they are the actual title.
-5. If the image is unclear, still provide your best analysis — do NOT return an empty or partial response."""
+<output>
+Exactly follow this output format :
+{{
+    "detailed_description": "<comprehensive visual description following the instructions above, natural prose only>",
+    "entity_info": {{
+        "entity_name": "{entity_name}",
+        "entity_type": "image",
+        "summary": "<concise summary of image and significance, max 100 words>"
+    }}
+}}
+</output>
+Output:
+"""
 
 # Image analysis prompt with context support
-PROMPTS[
-    "vision_prompt_with_context"
-] = """You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, markdown, preamble, or text outside the JSON. Do NOT wrap the JSON in code blocks.
-
+PROMPTS["vision_prompt_with_context"] = """
+You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, markdown, preamble, or text outside the JSON. Do NOT wrap the JSON in code blocks.
 Your response MUST contain EXACTLY these two top-level keys: "detailed_description" and "entity_info". Any response missing either key is invalid and will cause a processing error.
 
 Required JSON structure:
@@ -168,18 +181,19 @@ STRICT RULES:
 5. If the image is unclear, still provide your best analysis — do NOT return an empty or partial response."""
 
 # Image analysis prompt with text fallback
-PROMPTS["text_prompt"] = """Based on the following image information, provide analysis:
+PROMPTS["text_prompt"] = """
+Based on the following image information, provide analysis:
 
 Image Path: {image_path}
 Captions: {captions}
 Footnotes: {footnotes}
 
-{vision_prompt}"""
+{vision_prompt}
+"""
 
 # Table analysis prompt template
-PROMPTS[
-    "table_prompt"
-] = """Please analyze this table content and provide a JSON response with the following structure:
+PROMPTS["table_prompt"] = """
+Please analyze this table content and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the table including:
@@ -203,12 +217,12 @@ Caption: {table_caption}
 Body: {table_body}
 Footnotes: {table_footnote}
 
-Focus on extracting meaningful insights and relationships from the tabular data."""
+Focus on extracting meaningful insights and relationships from the tabular data.
+"""
 
 # Table analysis prompt with context support
-PROMPTS[
-    "table_prompt_with_context"
-] = """Please analyze this table content considering the surrounding context, and provide a JSON response with the following structure:
+PROMPTS["table_prompt_with_context"] = """
+Please analyze this table content considering the surrounding context, and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the table including:
@@ -236,12 +250,12 @@ Caption: {table_caption}
 Body: {table_body}
 Footnotes: {table_footnote}
 
-Focus on extracting meaningful insights and relationships from the tabular data in the context of the surrounding content."""
+Focus on extracting meaningful insights and relationships from the tabular data in the context of the surrounding content.
+"""
 
 # Equation analysis prompt template
-PROMPTS[
-    "equation_prompt"
-] = """Please analyze this mathematical equation and provide a JSON response with the following structure:
+PROMPTS["equation_prompt"] = """
+Please analyze this mathematical equation and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the equation including:
@@ -264,12 +278,12 @@ Equation Information:
 Equation: {equation_text}
 Format: {equation_format}
 
-Focus on providing mathematical insights and explaining the equation's significance."""
+Focus on providing mathematical insights and explaining the equation's significance.
+"""
 
 # Equation analysis prompt with context support
-PROMPTS[
-    "equation_prompt_with_context"
-] = """Please analyze this mathematical equation considering the surrounding context, and provide a JSON response with the following structure:
+PROMPTS["equation_prompt_with_context"] = """
+Please analyze this mathematical equation considering the surrounding context, and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the equation including:
@@ -296,12 +310,12 @@ Equation Information:
 Equation: {equation_text}
 Format: {equation_format}
 
-Focus on providing mathematical insights and explaining the equation's significance within the broader context."""
+Focus on providing mathematical insights and explaining the equation's significance within the broader context.
+"""
 
 # Generic content analysis prompt template
-PROMPTS[
-    "generic_prompt"
-] = """Please analyze this {content_type} content and provide a JSON response with the following structure:
+PROMPTS["generic_prompt"] = """
+Please analyze this {content_type} content and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the content including:
@@ -320,12 +334,12 @@ PROMPTS[
 
 Content: {content}
 
-Focus on extracting meaningful information that would be useful for knowledge retrieval."""
+Focus on extracting meaningful information that would be useful for knowledge retrieval.
+"""
 
 # Generic content analysis prompt with context support
-PROMPTS[
-    "generic_prompt_with_context"
-] = """Please analyze this {content_type} content considering the surrounding context, and provide a JSON response with the following structure:
+PROMPTS["generic_prompt_with_context"] = """
+Please analyze this {content_type} content considering the surrounding context, and provide a JSON response with the following structure:
 
 {{
     "detailed_description": "A comprehensive analysis of the content including:
@@ -348,7 +362,8 @@ Context from surrounding content:
 
 Content: {content}
 
-Focus on extracting meaningful information that would be useful for knowledge retrieval and understanding the content's role in the broader context."""
+Focus on extracting meaningful information that would be useful for knowledge retrieval and understanding the content's role in the broader context.
+"""
 
 # Modal chunk templates
 PROMPTS["image_chunk"] = """
@@ -359,23 +374,30 @@ Image Path: {image_path}
 Captions: {captions}
 Footnotes: {footnotes}
 
-Visual Analysis: {enhanced_caption}"""
+Visual Analysis: {enhanced_caption}
+"""
 
-PROMPTS["table_chunk"] = """Table Analysis:
+PROMPTS["table_chunk"] = """
+Table Analysis:
 Image Path: {table_img_path}
 Caption: {table_caption}
 Structure: {table_body}
 Footnotes: {table_footnote}
 
-Analysis: {enhanced_caption}"""
+Analysis: {enhanced_caption}
+"""
 
-PROMPTS["equation_chunk"] = """Mathematical Equation Analysis:
+PROMPTS["equation_chunk"] = """
+Mathematical Equation Analysis:
 Equation: {equation_text}
 Format: {equation_format}
 
-Mathematical Analysis: {enhanced_caption}"""
+Mathematical Analysis: {enhanced_caption}
+"""
 
-PROMPTS["generic_chunk"] = """{content_type} Content Analysis:
+PROMPTS["generic_chunk"] = """
+{content_type} Content Analysis:
+
 Content: {content}
 
 Analysis: {enhanced_caption}"""
@@ -389,9 +411,8 @@ PROMPTS["QUERY_IMAGE_ANALYST_SYSTEM"] = (
     "You are a professional image analyst who can accurately describe image content."
 )
 
-PROMPTS[
-    "QUERY_TABLE_ANALYSIS"
-] = """Please analyze the main content, structure, and key information of the following table data:
+PROMPTS["QUERY_TABLE_ANALYSIS"] = """
+Please analyze the main content, structure, and key information of the following table data:
 
 Table data:
 {table_data}
@@ -404,9 +425,8 @@ PROMPTS["QUERY_TABLE_ANALYST_SYSTEM"] = (
     "You are a professional data analyst who can accurately analyze table data."
 )
 
-PROMPTS[
-    "QUERY_EQUATION_ANALYSIS"
-] = """Please explain the meaning and purpose of the following mathematical formula:
+PROMPTS["QUERY_EQUATION_ANALYSIS"] = """
+Please explain the meaning and purpose of the following mathematical formula:
 
 LaTeX formula: {latex}
 Formula caption: {equation_caption}
@@ -417,9 +437,8 @@ PROMPTS["QUERY_EQUATION_ANALYST_SYSTEM"] = (
     "You are a mathematics expert who can clearly explain mathematical formulas."
 )
 
-PROMPTS[
-    "QUERY_GENERIC_ANALYSIS"
-] = """Please analyze the following {content_type} type content and extract its main information and key features:
+PROMPTS["QUERY_GENERIC_ANALYSIS"] = """
+Please analyze the following {content_type} type content and extract its main information and key features:
 
 Content: {content_str}
 
