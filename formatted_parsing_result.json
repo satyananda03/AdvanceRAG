@@ -1,0 +1,525 @@
+[
+  {
+    "type": "text",
+    "text": "# LAPORAN POSISI KEUANGAN",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "sebesar Rp1.860,41 triliun. Sementara itu, Dana Syirkah Temporer tumbuh sebesar 14,32%, atau sebesar Rp36,28 triliun menjadi Rp289,62 triliun per Desember 2025. Hal ini mengindikasikan peningkatan yang stabil pada sumber dana syariah.",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "Laporan posisi keuangan konsolidasian Bank Mandiri menunjukkan adanya pertumbuhan yang konsisten pada semua indikator kinerja utama dari 2023 hingga 2025. Total aset Bank Mandiri meningkat sebesar 16,59% secara year to date (ytd) dari Desember 2024 ke Desember 2025, dengan nominal pertumbuhan mencapai Rp402,72 triliun. Posisi total aset Bank Mandiri menjadi Rp2.829,95 triliun per Desember 2025. Hal ini mencerminkan ekspansi cukup signifikan pada sejumlah aset strategis yang dilakukan Bank Mandiri selama 2025.",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "Ekuitas perusahaan meningkat sebesar 4,44% (ytd) atau sebesar Rp13,93 triliun menjadi Rp327,40 triliun per Desember 2025. Jumlah ini naik dibanding 2024 sebesar Rp313,47 triliun. Peningkatan ekuitas ditopang pertumbuhan laba dan dukungan pemegang saham Bank Mandiri.",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "Sedangkan liabilitas tumbuh sebesar 18,95% (ytd) atau senilai Rp352,52 triliun menjadi Rp2.212,93 triliun per Desember 2025, naik dibandingkan posisi di 2024",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "## LAPORAN POSISI KEUANGAN KONSOLIDASIAN",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "(Dalam Rp juta)",
+    "page_idx": 0
+  },
+  {
+    "type": "table",
+    "table_body": "<table>\n  <thead>\n    <tr>\n        <th rowspan=\"2\">Pos Akun</th>\n        <th rowspan=\"2\">2023</th>\n        <th rowspan=\"2\">2024</th>\n        <th rowspan=\"2\">2025</th>\n        <th colspan=\"2\">Pertumbuhan (2024-2025)</th>\n    </tr>\n    <tr>\n        <th>Nominal</th>\n        <th>%</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Aset</td>\n        <td>2.174.219.449</td>\n        <td>2.427.223.262</td>\n        <td>2.829.948.026</td>\n        <td>402.724.764</td>\n        <td>16,59</td>\n    </tr>\n    <tr>\n        <td>Liabilitas</td>\n        <td>1.660.442.815</td>\n        <td>1.860.408.316</td>\n        <td>2.212.925.204</td>\n        <td>352.516.888</td>\n        <td>18,95</td>\n    </tr>\n    <tr>\n        <td>Dana Syirkah Temporer</td>\n        <td>226.281.672</td>\n        <td>253.340.265</td>\n        <td>289.620.824</td>\n        <td>36.280.559</td>\n        <td>14,32</td>\n    </tr>\n    <tr>\n        <td>Ekuitas</td>\n        <td>287.494.962</td>\n        <td>313.474.681</td>\n        <td>327.401.998</td>\n        <td>13.927.317</td>\n        <td>4,44</td>\n    </tr>\n    <tr>\n        <td>Liabilitas, Dana Syirkah Temporer dan Ekuitas</td>\n        <td>2.174.219.449</td>\n        <td>2.427.223.262</td>\n        <td>2.829.948.026</td>\n        <td>402.724.764</td>\n        <td>16,59</td>\n    </tr>\n  </tbody>\n</table>",
+    "table_caption": [
+      "(Dalam Rp juta)"
+    ],
+    "table_footnote": [
+      "Pertumbuhan total aset Bank Mandiri terutama masih didukung oleh total aset keuangan yang mencapai Rp2.723,02 triliun per Desember 2025, meningkat sebesar 17,18% dibanding tahun 2024 sebesar Rp2.323,82 triliun."
+    ],
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "Pertumbuhan total aset Bank Mandiri terutama masih didukung oleh total aset keuangan yang mencapai Rp2.723,02 triliun per Desember 2025, meningkat sebesar 17,18% dibanding tahun 2024 sebesar Rp2.323,82 triliun. Sedangkan total aset nonkeuangan mencapai Rp106,93 triliun. Dengan demikian, porsi total aset keuangan Bank Mandiri terhadap total asetnya dari 96,22%, naik dari tahun sebelumnya sebesar 95,74%.",
+    "page_idx": 0
+  },
+  {
+    "type": "table",
+    "table_body": "<table>\n  <thead>\n    <tr>\n        <th rowspan=\"2\">Aset Keuangan</th>\n        <th rowspan=\"2\">2023</th>\n        <th rowspan=\"2\">2024</th>\n        <th rowspan=\"2\">2025</th>\n        <th colspan=\"2\">Pertumbuhan (2024-2025)</th>\n    </tr>\n    <tr>\n        <th>Nominal</th>\n        <th>%</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Kas</td>\n        <td>26.431.740</td>\n        <td>31.665.082</td>\n        <td>33.857.220</td>\n        <td>2.192.138</td>\n        <td>6,92</td>\n    </tr>\n    <tr>\n        <td>Giro pada Bank Indonesia</td>\n        <td>108.605.322</td>\n        <td>105.146.044</td>\n        <td>238.289.478</td>\n        <td>133.143.434</td>\n        <td>126,63</td>\n    </tr>\n    <tr>\n        <td>Giro pada Bank Lain</td>\n        <td>36.606.090</td>\n        <td>46.668.439</td>\n        <td>60.952.583</td>\n        <td>14.284.144</td>\n        <td>30,61</td>\n    </tr>\n    <tr>\n        <td>Cadangan Kerugian Penurunan Nilai</td>\n        <td>(32.205)</td>\n        <td>(30.755)</td>\n        <td>(27.621)</td>\n        <td>3.134</td>\n        <td>-10,19</td>\n    </tr>\n    <tr>\n        <td><strong>Neto</strong></td>\n        <td><strong>36.573.885</strong></td>\n        <td><strong>46.637.684</strong></td>\n        <td><strong>60.924.962</strong></td>\n        <td><strong>14.287.278</strong></td>\n        <td><strong>30,63</strong></td>\n    </tr>\n    <tr>\n        <td>Penempatan pada Bank Indonesia dan Bank lain</td>\n        <td>73.888.157</td>\n        <td>63.230.054</td>\n        <td>50.471.834</td>\n        <td>(12.758.220)</td>\n        <td>-20,18</td>\n    </tr>\n    <tr>\n        <td>Cadangan Kerugian Penurunan Nilai</td>\n        <td>(957)</td>\n        <td>(1.679)</td>\n        <td>(1.586)</td>\n        <td>93</td>\n        <td>-5,54</td>\n    </tr>\n    <tr>\n        <td><strong>Neto</strong></td>\n        <td><strong>73.887.200</strong></td>\n        <td><strong>63.228.375</strong></td>\n        <td><strong>50.470.248</strong></td>\n        <td><strong>(12.758.127)</strong></td>\n        <td><strong>-20,18</strong></td>\n    </tr>\n    <tr>\n        <td>Efek-Efek</td>\n        <td>94.582.122</td>\n        <td>95.341.556</td>\n        <td>124.083.270</td>\n        <td>28.741.714</td>\n        <td>30,15</td>\n    </tr>\n    <tr>\n        <td>Cadangan Kerugian Penurunan Nilai</td>\n        <td>(36.281)</td>\n        <td>136.495</td>\n        <td>644.704</td>\n        <td>508.209</td>\n        <td>372,33</td>\n    </tr>\n    <tr>\n        <td><strong>Neto</strong></td>\n        <td><strong>94.545.841</strong></td>\n        <td><strong>95.478.051</strong></td>\n        <td><strong>124.727.974</strong></td>\n        <td><strong>29.249.923</strong></td>\n        <td><strong>30,64</strong></td>\n    </tr>\n  </tbody>\n</table>",
+    "table_caption": [
+      "Dengan demikian, porsi total aset keuangan Bank Mandiri terhadap total asetnya dari 96,22%, naik dari tahun sebelumnya sebesar 95,74%."
+    ],
+    "table_footnote": [
+      "(Dalam Rp juta)"
+    ],
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "(Dalam Rp juta)",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "## ASET KEUANGAN",
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "Sementara berdasarkan golongan penerbit, kenaikan kepemilikan efek-efek ini terutama dipengaruhi oleh bertambahnya kepemilikan efek-efek yang diterbitkan oleh bank sentral dari Rp34,29 triliun di tahun 2024 menjadi Rp58,57 triliun pada Desember 2025, pemerintah dari Rp13,43 triliun menjadi Rp22,50 triliun, dan bank dari Rp5,55 triliun menjadi Rp8,67 triliun. Sedangkan kepemilikan Bank Mandiri pada efek-efek yang diterbitkan oleh perusahaan mengalami penurunan dari sebelumnya Rp27,85 triliun menjadi Rp22,49 triliun.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "# Penempatan pada Bank Indonesia dan Bank lain",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri mencatat penempatan pada Bank Indonesia dan bank lain neto sebesar Rp50,47 triliun pada Desember 2025, turun sebesar Rp12,76 triliun atau mencapai 20,18% dibanding tahun 2024 sebesar Rp63,23 triliun. Penurunan ini disebabkan oleh penurunan penempatan dalam mata uang Rupiah sebesar 40,43% sedangkan mata asing mengalami kenaikan sebesar 1,29%. Tingkat suku bunga rata-rata dalam mata uang Rupiah sebesar 6,12% dan mata uang asing sebesar 3,88%.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan sisa umur hingga jatuh tempo, pada Desember 2025, sebagian besar efek-efek dalam mata uang Rupiah mayoritas berjangka pendek atau kurang dari 1 (satu) tahun sebesar Rp59,81 triliun atau 64,75% dari total efek-efek dalam mata uang Rupiah. Begitu pula dengan efek-efek dalam mata uang asing, sebagian besar berjangka pendek senilai Rp27,25 triliun, atau 84,15% dari total efek-efek dalam mata uang asing.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "# Efek-Efek",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Efek-Efek neto tercatat sebesar Rp124,73 triliun pada Desember 2025, naik sebesar Rp29,25 triliun atau 30,64% dibanding tahun 2024 sebesar Rp95,48 triliun. Kenaikan ini disebabkan naiknya efek-efek dari pihak ketiga sebesar Rp31,93 triliun atau 42,51% dibandingkan tahun sebelumnya sebesar Rp75,12 triliun.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "# Obligasi Pemerintah",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Kepemilikan Bank Mandiri atas obligasi pemerintah neto meningkat sebesar 1,93% (ytd) menjadi Rp292,82 triliun pada Desember 2025, dibandingkan tahun 2024 sebesar Rp287,27 triliun. Peningkatan ini dipengaruhi oleh kenaikan kepemilikan Bank Mandiri atas obligasi pemerintah dalam mata uang Rupiah sebesar 2,49% dari Rp235,67 triliun pada tahun 2024 menjadi Rp241,55 triliun pada Desember 2025. Porsi kepemilikan obligasi pemerintah dalam mata uang Rupiah pada Desember 2025 sebesar 82,49%, naik dibanding tahun 2024 sebesar 82,04%. Komposisi obligasi pemerintah pada Desember 2025 dan tahun 2024 digambarkan pada bagan berikut ini:",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Kenaikan Efek-efek berdasarkan mata uang ditopang dari kepemilikan efek-efek dalam mata uang asing dan mata uang Rupiah. Kepemilikan efek-efek dalam mata uang asing naik menjadi Rp32,39 triliun dan dalam mata uang Rupiah menjadi Rp92,38 triliun pada Desember 2025.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "### KOMPOSISI OBLIGASI PEMERINTAH",
+    "page_idx": 1
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_2_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=Pmfdg7YUIMZB%2FjBCRAx0eoDS%2BMA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "### KOMPOSISI OBLIGASI PEMERINTAH",
+      "# Tagihan Lainnya – Transaksi Perdagangan"
+    ],
+    "image_footnote": null,
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "# Tagihan Lainnya – Transaksi Perdagangan",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri membukukan peningkatan tagihan lainnya – transaksi perdagangan secara neto sebesar 7,32% (ytd) dari Rp28,55 triliun pada Desember 2024 menjadi Rp30,64 triliun pada Desember 2025. Peningkatan ini terutama berasal dari pihak ketiga sebesar 9,91% (ytd) dari Rp22,92 triliun di tahun 2024 menjadi Rp25,19 triliun pada Desember 2025.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan mata uang, tagihan lainnya – transaksi perdagangan dalam mata uang Rupiah meningkat sebesar 4,91% dari Rp18,19 triliun pada Desember 2024 menjadi Rp19,08 triliun pada Desember 2025. Begitu pula dengan tagihan lainnya – transaksi perdagangan dalam mata uang asing yang naik sebesar 10,22% dari Rp11,79 triliun pada Desember 2024 menjadi Rp12,99 triliun pada Desember 2025.",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan jenisnya, peningkatan akun ini ditopang dari peningkatan tagihan transaksi perdagangan komponen lain-lain yang naik sebesar 19,23% (ytd) dari Rp20,49 triliun di 2024 menjadi Rp24,43 triliun pada Desember 2025. Komponen tagihan Supplier Chain Financing turun sebesar 24,43% dari Rp3,65 triliun pada Desember 2024 menjadi Rp2,76 triliun",
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "pada Desember 2025. Tagihan *Supplier Chain Financing* berkontribusi sebesar 8,60% dari total tagihan lainnya – transaksi perdagangan pada Desember 2025, dan sebesar 12,18% pada tahun 2024.",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "## KOMPOSISI TAGIHAN LAINNYA - TRANSAKSI PERDAGANGAN",
+    "page_idx": 2
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_3_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=RZ%2FuM%2FDfKzSxlidQr2WZOGRzGJw%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "## KOMPOSISI TAGIHAN LAINNYA - TRANSAKSI PERDAGANGAN",
+      "## Efek-efek yang Dibeli dengan Janji Dijual Kembali"
+    ],
+    "image_footnote": null,
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "## Efek-efek yang Dibeli dengan Janji Dijual Kembali",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri membukukan efek-efek yang dibeli dengan janji dijual kembali sebesar Rp3,90 triliun pada Desember 2025, turun sebesar 52,91% dibanding tahun 2024 sebesar Rp8,29 triliun. Tidak terdapat penurunan nilai sehingga CKPN tagihan atas efek-efek yang dibeli dengan janji dijual kembali tidak dibentuk.",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "## Tagihan Derivatif",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "Tagihan derivatif tercatat sebesar Rp7,28 triliun pada Desember 2025, turun sebesar 6,23% (ytd) dibanding tahun 2024 sebesar Rp7,76 triliun. Penurunan ini berasal dari pihak ketiga turun menjadi sebesar Rp4,25 triliun dari Rp4,81 triliun di tahun 2024, sedangkan pihak berelasi naik menjadi sebesar Rp3,03 triliun dari sebelumnya sebesar Rp2,95 triliun.",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "## Kredit yang Diberikan dan Piutang/Pembiayaan Syariah",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "Penyaluran kredit dan piutang/pembiayaan syariah oleh Bank Mandiri sebesar Rp1.849,97 triliun pada Desember 2025, tumbuh 13,97% (ytd) dibanding tahun 2024 sebesar Rp1.623,22 triliun. Berdasarkan mata uang, kenaikan kredit yang diberikan ini terutama ditopang dalam denominasi Rupiah dengan pertumbuhan sebesar 13,07% menjadi Rp1.512,67 triliun pada Desember 2025 dari sebelumnya sebesar Rp1.337,84 triliun pada Desember 2024. Secara proporsi, kredit dalam mata uang Rupiah stabil sebesar 81,77% terhadap total kredit dibanding tahun 2024 sebesar 82,42% di 2024.",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "## KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH BERDASARKAN MATA UANG",
+    "page_idx": 2
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_3_chart_2_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=5cPiOWPrfrReMOawuwnAPGOOCPY%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "## KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH BERDASARKAN MATA UANG",
+      "Berdasarkan jenisnya, pertumbuhan penyaluran kredit dan piutang/pembiayaan syariah Bank Mandiri didorong oleh kenaikan dari jenis kredit dan pembiayaan."
+    ],
+    "image_footnote": null,
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan jenisnya, pertumbuhan penyaluran kredit dan piutang/pembiayaan syariah Bank Mandiri didorong oleh kenaikan dari jenis kredit dan pembiayaan. Terdapat 3 jenis kredit dan pembiayaan yang berkontribusi besar atas kenaikan total kredit dan pembiayaan ini secara berurutan yakni kredit investasi yang meningkat sebesar Rp172,02 triliun atau tumbuh 34,26% (ytd) menjadi Rp674,05 triliun, kredit sindikasi yang meningkat sebesar Rp33,77 triliun atau tumbuh 22,26% (ytd) menjadi Rp185,47 triliun dan kredit konsumen yang bertambah sebesar Rp30,35 triliun atau tumbuh 8,84% (ytd) menjadi Rp373,48 triliun.",
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "Selain ketiga jenis kredit dan piutang/pembiayaan tersebut, Bank Mandiri juga menyalurkan kredit modal kerja, program pemerintah, karyawan dan ekspor. Rincian porsi masing-masing kredit dan piutang/pembiayaan Bank Mandiri pada pada Desember 2025 dan 2024, sebagai berikut:",
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "## PORSI JENIS KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH",
+    "page_idx": 3
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_4_chart_2_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=A9cees1LCfqXLxj1%2Fhf1C1G40e0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "## PORSI JENIS KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH"
+    ],
+    "image_footnote": null,
+    "page_idx": 3
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_4_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=35UgxF5fY9RcN9ye6C3H539%2BZbk%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "## PORSI JENIS KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH"
+    ],
+    "image_footnote": null,
+    "page_idx": 3
+  },
+  {
+    "type": "table",
+    "table_body": "<table>\n  <thead>\n    <tr>\n        <th>Kredit yang Diberikan dan Piutang/Pembiayaan Syariah Berdasarkan Jenis</th>\n        <th>2024</th>\n        <th>2025</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Investasi</td>\n        <td>30,93%</td>\n        <td>36,44%</td>\n    </tr>\n    <tr>\n        <td>Modal Kerja</td>\n        <td>28,69%</td>\n        <td>23,98%</td>\n    </tr>\n    <tr>\n        <td>Konsumen</td>\n        <td>21,14%</td>\n        <td>20,19%</td>\n    </tr>\n    <tr>\n        <td>Sindikasi</td>\n        <td>9,35%</td>\n        <td>10,03%</td>\n    </tr>\n    <tr>\n        <td>Program Pemerintah</td>\n        <td>5,72%</td>\n        <td>5,33%</td>\n    </tr>\n    <tr>\n        <td>Karyawan</td>\n        <td>3,01%</td>\n        <td>2,80%</td>\n    </tr>\n    <tr>\n        <td>Ekspor</td>\n        <td>1,17%</td>\n        <td>1,23%</td>\n    </tr>\n  </tbody>\n</table>",
+    "table_caption": [
+      "## PORSI JENIS KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH"
+    ],
+    "table_footnote": [
+      "Berdasarkan sektor ekonomi, kredit dan piutang/pembiayaan syariah lima terbesar pada Desember 2025 yakni sektor industri senilai Rp217,09 triliun, pertanian Rp203,99 triliun, perdagangan, restoran, dan hotel Rp203,65 triliun, pertambangan Rp157,19 triliun, dan pengangkutan, pergudangan, dan komunikasi Rp153,07 triliun."
+    ],
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan sektor ekonomi, kredit dan piutang/pembiayaan syariah lima terbesar pada Desember 2025 yakni sektor industri senilai Rp217,09 triliun, pertanian Rp203,99 triliun, perdagangan, restoran, dan hotel Rp203,65 triliun, pertambangan Rp157,19 triliun, dan pengangkutan, pergudangan, dan komunikasi Rp153,07 triliun.",
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "Sementara lima terbesar kredit dan piutang/pembiayaan syariah berdasarkan sektor ekonomi yang mencatatkan persentase pertumbuhan tertinggi pada Desember 2025 dibandingkan Desember 2024 yakni, listrik, gas, dan air tumbuh 57,93%, pertanian 30,51%, jasa sosial 30,13%, pengangkutan, pergudangan, dan komunikasi 20,75%; dan perdagangan, restoran, dan hotel 12,79%.",
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH BERDASARKAN SEKTOR EKONOMI (DALAM RP JUTA)",
+    "page_idx": 3
+  },
+  {
+    "type": "table",
+    "table_body": "<table>\n  <thead>\n    <tr>\n        <th rowspan=\"2\">Sektor Ekonomi</th>\n        <th rowspan=\"2\">2024</th>\n        <th rowspan=\"2\">2025</th>\n        <th colspan=\"2\">Pertumbuhan</th>\n    </tr>\n    <tr>\n        <th>Nominal</th>\n        <th>%</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Industri</td>\n        <td>198.299.361</td>\n        <td>217.086.468</td>\n        <td>18.787.107</td>\n        <td>9,47</td>\n    </tr>\n    <tr>\n        <td>Perdagangan, Restoran dan Hotel</td>\n        <td>180.565.431</td>\n        <td>203.653.075</td>\n        <td>23.087.644</td>\n        <td>12,79</td>\n    </tr>\n    <tr>\n        <td>Pertanian</td>\n        <td>156.305.561</td>\n        <td>203.989.473</td>\n        <td>47.683.912</td>\n        <td>30,51</td>\n    </tr>\n    <tr>\n        <td>Jasa Dunia Usaha</td>\n        <td>146.987.732</td>\n        <td>139.875.667</td>\n        <td>(7.112.065)</td>\n        <td>-4,84</td>\n    </tr>\n    <tr>\n        <td>Tambang</td>\n        <td>145.571.176</td>\n        <td>157.186.029</td>\n        <td>11.614.853</td>\n        <td>7,98</td>\n    </tr>\n    <tr>\n        <td>Pengangkutan, Pergudangan dan Komunikasi</td>\n        <td>126.768.881</td>\n        <td>153.068.816</td>\n        <td>26.299.935</td>\n        <td>20,75</td>\n    </tr>\n    <tr>\n        <td>Konstruksi</td>\n        <td>99.883.788</td>\n        <td>108.148.636</td>\n        <td>8.264.848</td>\n        <td>8,27</td>\n    </tr>\n    <tr>\n        <td>Jasa Sosial</td>\n        <td>106.464.061</td>\n        <td>138.540.617</td>\n        <td>32.076.556</td>\n        <td>30,13</td>\n    </tr>\n    <tr>\n        <td>Listrik, Gas dan Air</td>\n        <td>62.035.505</td>\n        <td>97.973.432</td>\n        <td>35.937.927</td>\n        <td>57,93</td>\n    </tr>\n    <tr>\n        <td>Lain-lain</td>\n        <td>400.335.116</td>\n        <td>430.445.743</td>\n        <td>30.110.627</td>\n        <td>7,52</td>\n    </tr>\n    <tr>\n        <td><strong>Jumlah</strong></td>\n        <td><strong>1.623.216.612</strong></td>\n        <td><strong>1.849.967.956</strong></td>\n        <td><strong>226.751.344</strong></td>\n        <td><strong>13,97</strong></td>\n    </tr>\n    <tr>\n        <td>Cadangan Kerugian Penurunan Nilai</td>\n        <td>(49.354.645)</td>\n        <td>(48.033.747)</td>\n        <td>1.320.898</td>\n        <td>-2,68%</td>\n    </tr>\n    <tr>\n        <td><strong>Neto</strong></td>\n        <td><strong>1.573.861.967</strong></td>\n        <td><strong>1.801.934.209</strong></td>\n        <td><strong>228.072.242</strong></td>\n        <td><strong>14,49</strong></td>\n    </tr>\n  </tbody>\n</table>",
+    "table_caption": [
+      "KREDIT YANG DIBERIKAN DAN PIUTANG/PEMBIAYAAN SYARIAH BERDASARKAN SEKTOR EKONOMI (DALAM RP JUTA)"
+    ],
+    "table_footnote": null,
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "## Penyaluran Kredit UMKM",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "## Kredit Program Pemerintah",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri aktif dalam mendukung penyaluran kredit program pemerintah. Terdapat beberapa jenis kredit ini, termasuk kredit investasi, kredit modal kerja permanen, kredit modal kerja, dan KPR Sejahtera Fasilitas Likuiditas Pembiayaan Perumahan (FLPP). Pemerintah dapat memberikan sebagian dan/atau keseluruhan dana.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Terkait dengan kredit Usaha Mikro, Kecil dan Menengah (UMKM), Bank Mandiri juga berperan aktif dalam penyaluran kredit dengan penjaminan kredit UMKM dari pemerintah sesuai PMK No.71/PMK.08/2020 tanggal 23 Juni 2020. Penjaminan pemerintah melalui badan usaha penjaminan, yaitu melalui PT Jaminan Kredit Indonesia dan PT Asuransi Kredit Indonesia. Hingga 30 November 2021, penyaluran kredit UMKM dengan penjaminan kredit dari pemerintah ini disalurkan kepada 13.352 debitur UMKM dengan nilai pencairan kredit sebesar Rp2,84 triliun.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Dalam rangka percepatan Pemulihan Ekonomi Nasional pada 2020, Bank berpartisipasi dalam penyaluran kredit program Pemulihan Ekonomi Nasional (PEN) sesuai dengan Peraturan Menteri Keuangan Nomor 70/PMK.05/2020 yang selanjutnya diperbaharui dengan PMK No. 104/PMK.05/2020 tanggal 6 Agustus 2020. Program penyaluran kredit dalam rangka PEN tersebut bersumber dari Penempatan Uang Negara kepada perbankan salah satunya di Bank Mandiri, dalam bentuk deposito dengan tenor 3 bulan sebesar Rp10 triliun pada 25 Juni 2020. Dana Pemerintah tersebut telah disalurkan dalam bentuk kredit sebesar Rp39,04 triliun sampai dengan tanggal jatuh tempo deposito pada 25 September 2020, dan selanjutnya dana dikembalikan ke Pemerintah.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Pada 2022, program penjaminan kredit UMKM dari pemerintah tersebut dilanjutkan penyalurannya sesuai PMK No.28/PMK.08/2022 tanggal 30 Maret 2022. Hingga 31 Desember 2022, penyaluran kredit UMKM dengan penjaminan kredit dari pemerintah ini disalurkan kepada 3.030 debitur UMKM dengan nilai pencairan kredit sebesar Rp148,66 miliar.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "## Restrukturisasi Kredit",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri melakukan restrukturisasi kredit melalui skema perpanjangan jangka waktu kredit, perpanjangan jangka waktu dan penurunan suku bunga kredit serta perpanjangan jangka waktu kredit dan skema restrukturisasi lain-lain. Skema restrukturisasi lain-lain terutama terdiri dari skema restrukturisasi penurunan suku bunga kredit, penjadwalan kembali bunga yang tertunggak dan perpanjangan jangka waktu pembayaran bunga tertunggak. Sampai dengan 31 Desember 2025, Bank Mandiri telah merestrukturisasi kredit sejumlah Rp99,14 triliun, naik sebesar 11,14% dibanding tahun 2024 sebesar Rp89,20 triliun.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Berdasarkan evaluasi dan proposal Bank Mandiri, dan sesuai Peraturan Menteri Keuangan Nomor 104/PMK.05/2020, Pemerintah melakukan Penempatan Dana Pemerintah Tahap II kepada perbankan salah satunya Bank Mandiri, dalam bentuk deposito dengan tenor 110 hari, sebesar Rp15 triliun pada 25 September 2020, yang telah disalurkan dalam bentuk kredit akumulatif sebesar Rp66,63 triliun sampai dengan tanggal jatuh tempo deposito pada 13 Januari 2021. Penempatan Dana Pemerintah Tahap II tersebut telah berakhir dan telah dikembalikan kepada Pemerintah pada tanggal 13 Januari 2021.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Komposisi restrukturisasi kredit dan kolektibilitasnya per 31 Desember 2025 dan 31 Desember 2024 dijelaskan pada bagan dan tabel berikut ini:",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "Per 31 Desember 2025, outstanding kredit program pemerintah di Bank Mandiri tercatat sebesar Rp98,63 triliun, meningkat sebesar 6,19% dibanding tahun 2024 sebesar Rp92,89 triliun.",
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "### KOMPOSISI RESTRUKTURISASI KREDIT DAN KOLEKTIBILITAS",
+    "page_idx": 4
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_5_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=mc4lbhKPfiD1Wv4QDEb7slIDE5s%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "### KOMPOSISI RESTRUKTURISASI KREDIT DAN KOLEKTIBILITAS"
+    ],
+    "image_footnote": null,
+    "page_idx": 4
+  },
+  {
+    "type": "table",
+    "table_body": "<table>\n  <thead>\n    <tr>\n        <th rowspan=\"2\">Liabilitas Keuangan</th>\n        <th rowspan=\"2\">2023</th>\n        <th rowspan=\"2\">2024</th>\n        <th rowspan=\"2\">2025</th>\n        <th colspan=\"2\">Pertumbuhan (2024-2025)</th>\n    </tr>\n    <tr>\n        <th>Nominal</th>\n        <th>%</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Liabilitas Segera</td>\n        <td>4.484.956</td>\n        <td>5.703.731</td>\n        <td>4.537.458</td>\n        <td>(1.166.273)</td>\n        <td>-20,45</td>\n    </tr>\n    <tr>\n        <td>Simpanan Nasabah</td>\n        <td>1.351.448.149</td>\n        <td>1.446.234.957</td>\n        <td>1.816.897.208</td>\n        <td>370.662.251</td>\n        <td>25,63</td>\n    </tr>\n    <tr>\n        <td>Simpanan dari Bank Lain</td>\n        <td>17.684.780</td>\n        <td>27.042.709</td>\n        <td>20.755.543</td>\n        <td>(6.287.166)</td>\n        <td>-23,25</td>\n    </tr>\n    <tr>\n        <td>Liabilitas kepada Pemegang Polis pada Kontrak <em>Unit-Link</em></td>\n        <td>29.194.702</td>\n        <td>35.487.487</td>\n        <td>37.850.988</td>\n        <td>2.363.501</td>\n        <td>6,66</td>\n    </tr>\n    <tr>\n        <td>Liabilitas Atas Efek-Efek yang Dijual Dengan Janji Dibeli Kembali</td>\n        <td>36.330.064</td>\n        <td>90.256.225</td>\n        <td>39.955.889</td>\n        <td>(50.300.336)</td>\n        <td>-55,73</td>\n    </tr>\n    <tr>\n        <td>Liabilitas Derivatif</td>\n        <td>2.113.853</td>\n        <td>7.336.998</td>\n        <td>6.841.621</td>\n        <td>(495.377)</td>\n        <td>-6,75</td>\n    </tr>\n    <tr>\n        <td>Liabilitas Akseptasi</td>\n        <td>14.793.888</td>\n        <td>9.136.013</td>\n        <td>7.919.333</td>\n        <td>(1.216.680)</td>\n        <td>-13,32</td>\n    </tr>\n    <tr>\n        <td>Liabilitas pajak tangguhan</td>\n        <td>-</td>\n        <td>9.278</td>\n        <td>27.996</td>\n        <td>18.718</td>\n        <td>201,75</td>\n    </tr>\n    <tr>\n        <td>Liabilitas dikuasai untuk dijual</td>\n        <td>-</td>\n        <td>-</td>\n        <td>127.472</td>\n        <td>127.472</td>\n        <td>100,00</td>\n    </tr>\n    <tr>\n        <td>Efek-efek yang Diterbitkan</td>\n        <td>50.317.764</td>\n        <td>41.141.067</td>\n        <td>62.205.231</td>\n        <td>21.064.164</td>\n        <td>51,20</td>\n    </tr>\n    <tr>\n        <td>Estimasi Kerugian atas Komitmen dan Kontinjensi</td>\n        <td>1.143.758</td>\n        <td>1.114.013</td>\n        <td>895.791</td>\n        <td>(218.222)</td>\n        <td>-19,59</td>\n    </tr>\n    <tr>\n        <td>Beban yang Masih Harus Dibayar</td>\n        <td>4.799.446</td>\n        <td>5.466.461</td>\n        <td>6.168.983</td>\n        <td>702.522</td>\n        <td>12,85</td>\n    </tr>\n    <tr>\n        <td>Liabilitas Lain-lain</td>\n        <td>37.399.213</td>\n        <td>32.656.899</td>\n        <td>42.339.668</td>\n        <td>9.682.769</td>\n        <td>29,65</td>\n    </tr>\n    <tr>\n        <td>Pinjaman yang Diterima</td>\n        <td>95.445.459</td>\n        <td>147.915.981</td>\n        <td>154.672.422</td>\n        <td>6.756.441</td>\n        <td>4,57</td>\n    </tr>\n    <tr>\n        <td>Pinjaman dan Efek-Efek Subordinasi</td>\n        <td>415.171</td>\n        <td>403.562</td>\n        <td>389.779</td>\n        <td>(13.783)</td>\n        <td>-3,42</td>\n    </tr>\n    <tr>\n        <td><strong>Jumlah Liabilitas Keuangan</strong></td>\n        <td><strong>1.645.571.203</strong></td>\n        <td><strong>1.849.905.381</strong></td>\n        <td><strong>2.201.457.910</strong></td>\n        <td><strong>351.680.001</strong></td>\n        <td><strong>19,01</strong></td>\n    </tr>\n  </tbody>\n</table>",
+    "table_caption": null,
+    "table_footnote": [
+      "(Dalam Rp juta)"
+    ],
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "(Dalam Rp juta)",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri mencatatkan Liabilitas Segera sebesar Rp4,54 triliun pada Desember 2025, turun sebesar Rp1,17 triliun atau 20,45% dibanding tahun 2024 sebesar Rp5,70 triliun.",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "Simpanan nasabah atau dana pihak ketiga (DPK) Bank Mandiri secara konsolidasian terdiri dari giro dan giro wadiah, tabungan dan tabungan wadiah, serta deposito berjangka. Total DPK Bank Mandiri pada Desember 2025 mencapai Rp1.816,90 triliun, meningkat sebesar 25,63% dibanding tahun sebelumnya sebesar Rp1.446,23 triliun. Rincian komposisi DPK Bank Mandiri yakni: Tabungan dan Tabungan Wadiah sebesar Rp621,91 triliun, Giro dan Giro Wadiah sebesar Rp666,11 triliun, dan Tabungan Berjangka mencapai Rp528,87 triliun.",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "Dari jumlah total DPK tersebut, pendanaan berbiaya murah atau CASA (termasuk dana syirkah temporer) mencapai 70,89% atau Rp1.288,02 triliun pada Desember 2025. CASA ini meningkat dibandingkan tahun 2024 sebesar Rp1.148,77 triliun. Komposisi DPK dan suku bunga rata-rata simpanan nasabah per tahun adalah sebagai berikut:",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "### KOMPOSISI DPK BANK MANDIRI",
+    "page_idx": 5
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_6_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=i93SiVJWW6UomFhCl4SRUzYXnWQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "### KOMPOSISI DPK BANK MANDIRI",
+      "Giro dan Giro Wadiah"
+    ],
+    "image_footnote": null,
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": " Giro dan Giro Wadiah ",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": " Tabungan dan Tabungan Wadiah Deposito Berjangka",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "# LIABILITAS KEUANGAN",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "## Liabilitas Segera",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "## Simpanan Nasabah",
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "## Pelindungan Nasabah",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Peraturan tersebut menegaskan bahwa proses penagihan utang harus dilakukan dengan tetap menjaga kenyamanan dan perlindungan bagi debitur sebagai konsumen. Jika penagihan dilakukan melalui Perusahaan Jasa Penagihan, Bank Mandiri wajib memastikan hal-hal berikut:",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Sebagai bagian dari komitmennya dalam menjaga kepercayaan nasabah, Bank Mandiri menerapkan Kebijakan Operasional Bank yang mengatur pelaksanaan fungsi pelindungan nasabah dan dijabarkan lebih lanjut dalam ketentuan internal di setiap unit kerja. Kebijakan ini menjadi dasar dalam membangun sistem pelindungan nasabah yang andal, sekaligus mendukung terciptanya sistem keuangan yang berkelanjutan, stabil, dan berpihak pada kepentingan konsumen serta masyarakat. Sejak Oktober 2022, Bank Mandiri telah membentuk Unit Pelindungan Nasabah sesuai dengan ketentuan POJK No. 22 Tahun 2023 dan PBI No. 3 Tahun 2023, yang memiliki tanggung jawab antara lain:",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Melengkapi hal tersebut, Bank Mandiri juga turut mengatur hak Kreditur untuk:",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Dalam menyalurkan kredit, Bank Mandiri senantiasa menerapkan prinsip kehati-hatian serta melakukan pemantauan portofolio secara berkala. Penerapan *due diligence* tercermin dalam mekanisme eskalasi persetujuan dan pengawasan kredit, terutama bagi debitur dengan skala besar dan tingkat risiko tinggi. Pada tahap *Loan Monitoring*, kualitas kredit debitur eksisting dievaluasi melalui beberapa metode, termasuk mekanisme *Watchlist* yang berfungsi sebagai *Early Warning Signal*. Evaluasi ini mempertimbangkan tiga aspek utama: prospek bisnis, kinerja keuangan, dan riwayat pembayaran.",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Selain itu, Bank Mandiri menetapkan kebijakan penagihan utang yang menjamin pemenuhan hak-hak debitur sebagaimana diatur dalam:",
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Jika hasil peninjauan menunjukkan adanya indikasi penurunan kualitas, Bank Mandiri akan melakukan langkah penyelamatan kredit terhadap debitur yang masih memiliki prospek usaha dan kemampuan membayar. Upaya ini bertujuan meminimalkan potensi kerugian serta memulihkan kembali kredit yang disalurkan, antara lain melalui program restrukturisasi sebagai berikut:",
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri membentuk Komite Bisnis dan Komite *Risk Management & Credit Policy Committee* (RMPC) yang bertugas mengevaluasi produk dan layanan serta menilai risiko atas setiap produk yang diterbitkan. Penjelasan lebih lanjut mengenai kedua komite tersebut disajikan pada Bab Tata Kelola Perusahaan dalam Laporan Tahunan ini.",
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "Selain itu, Bank Mandiri juga memiliki kebijakan internal terkait aktivitas pemasaran dan komunikasi produk yang disusun sesuai ketentuan regulator, termasuk POJK No. 22 Tahun 2023, Pedoman Iklan Jasa Keuangan OJK, dan PADK No. 37/PADK.08/2025. Seluruh kegiatan pemasaran dilaporkan secara berkala kepada Direksi untuk memastikan kepatuhan dan perlindungan konsumen. Guna meningkatkan pemahaman masyarakat tentang keuangan dan perbankan, Bank Mandiri menjalankan berbagai program literasi keuangan, antara lain:",
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "Bank Mandiri secara konsisten menyelenggarakan pelatihan bagi pegawai guna memperkuat kemampuan dalam memberikan pelindungan nasabah, sebagaimana tercantum dalam Laporan Tahunan dan Laporan Keberlanjutan Bank Mandiri Bab *Sustainable Operation*. Selain itu, Bank Mandiri juga menerapkan mekanisme penanganan pengaduan bagi nasabah yang menghadapi kendala atau keluhan transaksi melalui *Customer Care Group*, unit khusus yang bertugas mengelola serta memantau penyelesaian pengaduan sesuai *Service Level Agreement* (SLA) yang berlaku.",
+    "page_idx": 7
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_8_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=j1Sye%2Fqq1x%2FPT3%2BHa6xHSN%2BIN10%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "Selain itu, Bank Mandiri juga menerapkan mekanisme penanganan pengaduan bagi nasabah yang menghadapi kendala atau keluhan transaksi melalui *Customer Care Group*, unit khusus yang bertugas mengelola serta memantau penyelesaian pengaduan sesuai *Service Level Agreement* (SLA) yang berlaku.",
+      "## PENANGANAN PENGADUAN NASABAH"
+    ],
+    "image_footnote": null,
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "## PENANGANAN PENGADUAN NASABAH",
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "Untuk memastikan kemudahan bagi nasabah dalam menyampaikan keluhan, Bank Mandiri menyediakan berbagai saluran pengaduan yang dapat diakses secara lisan maupun tertulis, antara lain:",
+    "page_idx": 8
+  },
+  {
+    "type": "text",
+    "text": "<mark>Untuk memastikan kemudahan bagi nasabah dalam menyampaikan keluhan, Bank Mandiri menyediakan berbagai saluran pengaduan yang dapat diakses secara lisan maupun tertulis, antara lain:</mark>",
+    "page_idx": 8
+  },
+  {
+    "type": "image",
+    "img_path": "https://llama-platform-file-parsing.s3.amazonaws.com/5e8065cd-4744-4755-9f5c-545028796189/e3f92bab-1439-4be4-b96a-226abe04d25a/page_9_chart_1_v2.jpg?AWSAccessKeyId=ASIAXMCG64XT55L7D47S&Signature=%2BsEx%2BJbL%2B%2B6oy7cWFd3iGiiUeHI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDqtBhzPGC4CldFxKO%2FFfwaX6aQ3w2nLTlJ%2FWt%2Fa21VEgIhAN5N5btdyYl7V3hAEOFE0xzAt5b%2FDgWNDBC9sxDciGslKocFCGgQABoMNTA2OTU0OTY2NTAzIgxWFYysKMDbfyExbsoq5ARx8PpJNCsgHzRfhf%2FC3H5wwOL0GSEBeVSOR%2BXTcBRgIH1Ks2OPEYg9qVYBaoXyMPYEHhbYcOcwWmXS4N0BScwh1OdWDIO1OpCZenf4Zd94vxsMqM6ZFe%2BuyXD%2BkKgBi0zIwc96nLILRzrBjJy25c2MuLqrI9yVkqgEj0OhPaNsIsPWCCR4IF%2BMV8U8VWoJFnMO%2Fc%2FTsrNj7LB3BZQBHvfEesc%2BNmCNYE%2FpehG%2FG6ITL7tIVtaFVfVUwyR6xaoZSQHcyjkFX3U0h1pLK8DI%2BwHxb6jpjWoyPqpd9o8poPg6ZLxzBiwXp9lcdWBTL9Lc2YhyC6H45UjweAmLXtemdfcebVgptRHLEfCmewEhht%2BFGtv99p8o6Wd8S8SGihhnXwpNaBH3s8z665hGvM%2Fj%2F%2FkWR39z8dhnpQUpOu9oXjxBkDkU5wNkk1sXLcExPIKEns45G8%2BMIhx%2B%2BDb%2BYwulfhAm2dyuZCEGZVUbrANRnZzvE%2FwLVAPrhZh2HyC8sRj8Y%2B99BnMh%2FWRnRhqGJrZT40qsFHzHdkFhLK27ZkzsXcoRXLdBqV221Fjf94NY7lVQGt%2ByzCkB4x5LmovbF1FG%2F76w%2F2C96TZ57coXP7id8Sf3H9d%2FCDViiOSDbbLC5su6l%2BfiWynTrbmt4Qck27mKknXdThtrPNzMhy9F92KFr0BjrLfLw%2BrvYhw65%2B3V8UZBvtqa6yw5U0w6RZ3k0un07W7a0TopWnfb4Np%2Fir5DVnCoT9rTz6tgFFEtgL9O8HEiJ3bsUT%2B8yofzlf4JNfCctWTr23YXD8gK%2B6aIjjE3Gd0U%2BUL1fr4w8Mmy0gY6lwFC1FXdUQYFytEjSNpXh16l1NPXLYzwWkzw%2FQCVqsedzSqJFEjhWpbp7WcpLD9y2NgwEPjxnekVtQUxRfCQb%2F%2Fx6SrufKjiT9wa91xAoUaGSXLKXM%2BgrnVjZnqfxio3YBrYEZg%2BXH4W1LN9Li3cV6JL3UtEqsEwLuxCXu2AFSwRceoRGNEgAfI9HC8SsNOknN78gw7lrt8b&Expires=1783412175",
+    "image_caption": [
+      "<mark>Untuk memastikan kemudahan bagi nasabah dalam menyampaikan keluhan, Bank Mandiri menyediakan berbagai saluran pengaduan yang dapat diakses secara lisan maupun tertulis, antara lain:</mark>",
+      "Selain mekanisme pengaduan yang telah ada, Bank Mandiri juga menyediakan saluran pelaporan *Whistleblowing System – Letter to CEO* (WBS-LTC) yang dikelola oleh pihak ketiga independen."
+    ],
+    "image_footnote": null,
+    "page_idx": 8
+  },
+  {
+    "type": "text",
+    "text": "Selain mekanisme pengaduan yang telah ada, Bank Mandiri juga menyediakan saluran pelaporan *Whistleblowing System – Letter to CEO* (WBS-LTC) yang dikelola oleh pihak ketiga independen. Sistem ini dirancang untuk memastikan pengelolaan yang profesional dan bebas dari benturan kepentingan, memberikan rasa aman bagi pelapor, meningkatkan kepercayaan pemangku kepentingan, serta memungkinkan pelapor memantau tindak lanjut laporannya. Informasi lebih lanjut mengenai sistem ini tersedia pada Laporan Tahunan Bab Tata Kelola dan Laporan Keberlanjutan Bab Layanan dan Kepuasan Pelanggan.",
+    "page_idx": 8
+  },
+  {
+    "type": "text",
+    "text": "### PRIVASI DAN KEAMANAN DATA",
+    "page_idx": 8
+  },
+  {
+    "type": "text",
+    "text": "Perseroan menempatkan privasi dan keamanan data sebagai bagian penting dalam menjaga kepercayaan nasabah, mendukung ketahanan operasional, dan memastikan keberlangsungan transformasi digital. Untuk itu, Perseroan menerapkan pengelolaan privasi, tata kelola data, dan keamanan informasi secara terintegrasi melalui kebijakan internal, pengawasan pada level Dewan Komisaris dan Direksi, serta kerangka pelindungan data pribadi yang mencakup aspek *assess, protect, sustain,* dan *respond*. Implementasinya meliputi pengelolaan dasar pemrosesan termasuk *consent*, pelindungan hak subjek data pribadi, pengamanan informasi, pengendalian pemrosesan data oleh pihak ketiga, peningkatan kesadaran dan kompetensi pegawai, serta pemantauan, evaluasi, dan audit secara berkala untuk menjaga kerahasiaan, integritas, dan ketersediaan data serta memastikan kepatuhan terhadap ketentuan yang berlaku. Rincian lebih lanjut mengenai pendekatan, kebijakan, implementasi, serta penguatan privasi dan keamanan data Perseroan disajikan dalam Laporan Keberlanjutan yang diterbitkan secara terpisah namun tetap menjadi satu kesatuan dengan Laporan Tahunan ini.",
+    "page_idx": 8
+  }
+]

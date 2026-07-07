@@ -1,0 +1,128 @@
+[project]
+name = "lightrag-app"
+version = "1.5.5"
+description = "Multimodal RAG application — LightRAG + RAG-Anything pipeline"
+requires-python = ">=3.10,<3.13"
+
+# Runtime deps for the app layer (app/ package itself).
+# lightrag + raganything are NOT listed here — they live as editable source
+# under app/modules/ and are injected into sys.path by run.py at startup.
+dependencies = [
+    # FastAPI server
+    "fastapi>=0.108",
+    "uvicorn",
+    "gunicorn",
+    "python-multipart>=0.0.30",
+    # Config
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv",
+    # LightRAG / RAG-Anything hard deps that aren't bundled in modules/
+    "aiohttp",
+    "aiofiles",
+    "ascii_colors",
+    "bcrypt>=4.0.0",
+    "configparser",
+    "cryptography>=48.0.1",
+    "distro",
+    "google-api-core>=2.0.0,<3.0.0",
+    "google-genai>=1.0.0,<3.0.0",
+    "httpcore",
+    "httpx>=0.28.1",
+    "jiter",
+    "json_repair",
+    "nano-vectordb",
+    "networkx",
+    "numpy>=1.24.0,<3.0.0",
+    "openai>=2.0.0,<3.0.0",
+    "packaging",
+    "pandas>=2.0.0,<2.4.0",
+    "pipmaster",
+    "psutil",
+    "PyJWT>=2.8.0,<3.0.0",
+    "pypinyin",
+    "PyYAML>=6.0,<7.0",
+    "pytz",
+    "setuptools",
+    "tenacity",
+    "tiktoken",
+    "tqdm>=4.67.3",
+    "xlsxwriter>=3.1.0",
+    # Document processing
+    "openpyxl>=3.0.0,<4.0.0",
+    "pycryptodome>=3.0.0,<4.0.0",
+    "pypdf>=6.1.0",
+    "python-docx>=0.8.11,<2.0.0",
+    "python-pptx>=0.6.21,<2.0.0",
+    "cairosvg>=2.5.0,<3.0.0",
+    "defusedxml>=0.7.0,<1.0.0",
+    # Chunking strategies
+    "langchain-text-splitters>=0.3,<2",
+    "langchain-experimental>=0.3.2,<1",
+    # Postgres (default storage backend)
+    "asyncpg>=0.31.0,<1.0.0",
+    "pgvector>=0.4.2,<1.0.0",
+    # Auth
+    "python-jose[cryptography]",
+    "mineru[core]>=3.4.2",
+    "llama-cloud>=2.1",
+    "byteplus-python-sdk-v2>=3.0.52",
+]
+
+[project.optional-dependencies]
+# Additional storage backends (optional, add as needed)
+storage = [
+    "faiss-cpu>=1.7.0,<2.0.0",
+    "redis>=5.0.0,<9.0.0",
+    "neo4j>=5.0.0,<7.0.0",
+    "pymilvus>=2.6.2,<4.0.0",
+    "pymongo>=4.0.0,<5.0.0",
+    "qdrant-client>=1.11.0,<2.0.0",
+    "opensearch-py>=3.0.0,<4.0.0",
+]
+
+# Additional LLM providers (optional)
+llm = [
+    "anthropic>=0.18.0,<1.0.0",
+    "ollama>=0.1.0,<1.0.0",
+    "zhipuai>=2.0.0,<3.0.0",
+    "aioboto3>=12.0.0,<16.0.0",
+    "voyageai>=0.2.0,<1.0.0",
+]
+
+test = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "ruff",
+]
+
+[project.scripts]
+# Entry points — delegate to modules/ forks via run.py path injection
+lightrag-server = "run:main"
+
+[tool.setuptools.packages.find]
+# Only package the app/ layer. modules/ is NOT a Python package (no __init__.py)
+# and is injected via sys.path at runtime.
+include = ["app*"]
+exclude = ["tests*", "scripts*", "examples*", "rag_storage*", "inputs*", "output*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "integration: requires live services",
+    "offline: no external services needed",
+]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.uv]
+prerelease = "allow"  
