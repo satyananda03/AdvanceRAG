@@ -47,7 +47,7 @@ def parse_document_to_json(file_path: str, output_file: str = "raw_parsing_resul
     # Simpan ke file JSON
     # with open(output_file, "w", encoding="utf-8") as f:
     #     json.dump(raw_dict, f, indent=2, ensure_ascii=False, default=str)
-    print(f"Raw JSON disimpan ke: {output_file}")
+    # print(f"Raw JSON disimpan ke: {output_file}")
 
     return raw_dict
 

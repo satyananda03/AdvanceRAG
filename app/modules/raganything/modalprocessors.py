@@ -959,12 +959,16 @@ class ImageModalProcessor(BaseModalProcessor):
             if not image_base64:
                 raise RuntimeError(f"Failed to encode image to base64: {image_path}")
 
+            logger.info(f"[VLM] Calling vision model for: {image_path}")
+
             # Call vision model with encoded image
             response = await self.modal_caption_func(
                 vision_prompt,
                 image_data=image_base64,
                 system_prompt=PROMPTS["IMAGE_ANALYSIS_SYSTEM"],
             )
+
+            logger.info(f"[VLM] Got response for: {image_path} (len={len(response) if response else 0})")
 
             # Parse response (reuse existing logic)
             enhanced_caption, entity_info = self._parse_response(response, entity_name)

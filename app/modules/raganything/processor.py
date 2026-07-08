@@ -937,10 +937,15 @@ class ProcessorMixin:
         ):
             """Process single item using the correct processor for its type"""
             nonlocal completed_count
+            content_type = item.get("type", "unknown")
+            self.logger.info(
+                f"[Item {index}/{total_items}] Waiting for semaphore (type={content_type})"
+            )
             async with semaphore:
+                self.logger.info(
+                    f"[Item {index}/{total_items}] Acquired semaphore, starting (type={content_type})"
+                )
                 try:
-                    content_type = item.get("type", "unknown")
-
                     # Select the correct processor based on content type
                     processor = get_processor_for_type(
                         self.modal_processors, content_type
@@ -958,6 +963,9 @@ class ProcessorMixin:
                         "type": content_type,
                     }
 
+                    import time as _time
+                    _t0 = _time.time()
+
                     # Call the correct processor's description generation method
                     (
                         description,
@@ -967,6 +975,11 @@ class ProcessorMixin:
                         content_type=content_type,
                         item_info=item_info,
                         entity_name=None,  # Let LLM auto-generate
+                    )
+
+                    _elapsed = _time.time() - _t0
+                    self.logger.info(
+                        f"[Item {index}/{total_items}] Completed in {_elapsed:.1f}s (type={content_type})"
                     )
 
                     # Update progress (non-blocking)

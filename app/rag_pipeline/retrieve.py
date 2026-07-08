@@ -38,15 +38,14 @@ async def retrieve(
     logger.debug(f"[retrieve] mode={mode} query={query[:80]!r}")
     return await rag.aquery(query, mode=mode, **query_kwargs)
 
-
 async def retrieve_multimodal(
-    rag: RAGAnything,
-    query: str,
-    multimodal_content: List[dict],
-    *,
-    mode: str = "mix",
-    **query_kwargs: Any,
-) -> str:
+        rag: RAGAnything,
+        query: str,
+        multimodal_content: List[dict],
+        *,
+        mode: str = "mix",
+        **query_kwargs: Any,
+    ) -> str:
     """Retrieval augmented with query-time multimodal payloads.
 
     ``multimodal_content`` is a list of dicts like::

@@ -95,6 +95,7 @@ You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, 
    - For Charts/Diagrams: Identify axes, labels, legends, and extract specific quantitative data points/trends.
    - For Screenshots/Interfaces: Identify layout, main functional components, and visible text.
    - For Photos/Illustrations: Identify the primary subject, scene, spatial layout, and relationships between elements.
+   - For Text/Tables: Quote short important text verbatim; summarize long blocks. Always use specific names instead of generic pronouns.
 
 2. USE OF ADDITIONAL CONTEXT
    You are provided with contextual metadata (Section Path, Image Path, Captions, Footnotes).
@@ -117,7 +118,6 @@ You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, 
 </instructions>
 
 <context>
-ADDITIONAL CONTEXT :
 - Section Path: {section_path}
 - Image Path: {image_path}
 - Captions: {captions}
@@ -125,7 +125,7 @@ ADDITIONAL CONTEXT :
 </context>
 
 <output>
-Exactly follow this output format :
+Follow this output format exactly :
 {{
     "detailed_description": "<comprehensive visual description following the instructions above, natural prose only>",
     "entity_info": {{
@@ -134,9 +134,10 @@ Exactly follow this output format :
         "summary": "<concise summary of image and significance, max 100 words>"
     }}
 }}
-</output>
+
 Output:
-"""
+</output>"""
+
 
 # Image analysis prompt with context support
 PROMPTS["vision_prompt_with_context"] = """
