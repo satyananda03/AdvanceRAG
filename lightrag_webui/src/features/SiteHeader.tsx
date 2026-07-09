@@ -1,5 +1,5 @@
 import Button from '@/components/ui/Button'
-import { SiteInfo, webuiPrefix } from '@/lib/constants'
+import { webuiPrefix } from '@/lib/constants'
 import AppSettings from '@/components/AppSettings'
 import { TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { useSettingsStore } from '@/stores/settings'
@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 import { navigationService } from '@/services/navigation'
 import { ZapIcon, LogOutIcon } from 'lucide-react'
-import GithubIcon from '@/components/icons/GithubIcon'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/Tooltip'
 
 interface NavigationTabProps {
@@ -59,15 +58,6 @@ export default function SiteHeader() {
   const { t } = useTranslation()
   const { isGuestMode, coreVersion, apiVersion, username, webuiTitle, webuiDescription } = useAuthStore()
 
-  const versionDisplay = (coreVersion && apiVersion)
-    ? `${coreVersion}/${apiVersion}`
-    : null;
-
-  // Check if frontend needs rebuild (apiVersion ends with warning symbol)
-  const hasWarning = apiVersion?.endsWith('⚠️');
-  const versionTooltip = hasWarning
-    ? t('header.frontendNeedsRebuild')
-    : versionDisplay ? `v${versionDisplay}` : '';
 
   const handleLogout = () => {
     navigationService.navigateToLogin();
@@ -78,7 +68,7 @@ export default function SiteHeader() {
       <div className="min-w-[200px] w-auto flex items-center">
         <a href={webuiPrefix} className="flex items-center gap-2">
           <ZapIcon className="size-4 text-emerald-400" aria-hidden="true" />
-          <span className="font-bold md:inline-block">{SiteInfo.name}</span>
+          <span className="font-bold md:inline-block">Dashboard</span>
         </a>
         {webuiTitle && (
           <div className="flex items-center">
@@ -112,25 +102,8 @@ export default function SiteHeader() {
 
       <nav className="w-[200px] flex items-center justify-end">
         <div className="flex items-center gap-2">
-          {versionDisplay && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mr-1 cursor-default">
-                    v{versionDisplay}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  {versionTooltip}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          <Button variant="ghost" size="icon" side="bottom" tooltip={t('header.projectRepository')}>
-            <a href={SiteInfo.github} target="_blank" rel="noopener noreferrer">
-              <GithubIcon className="size-4" />
-            </a>
-          </Button>
+
+
           <AppSettings />
           {!isGuestMode && (
             <Button

@@ -34,7 +34,6 @@ def parse_document_to_json(file_path: str, output_file: str = "raw_parsing_resul
         }
     )
     print("Parsing selesai\n")
-
     # Konversi objek Pydantic ke dictionary
     try:
         raw_dict = result.model_dump()
@@ -255,7 +254,7 @@ def reconstruct_content_list(data: dict, output_file: str = "formatted_parsing_r
                     "page_idx": page_idx
                 })
         # # Simpan ke file JSON
-        with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(content_list, f, indent=2, ensure_ascii=False, default=str)
-        print(f"Raw JSON disimpan ke: {output_file}")
+        # with open(output_file, "w", encoding="utf-8") as f:
+        #     json.dump(content_list, f, indent=2, ensure_ascii=False, default=str)
+        # print(f"Raw JSON disimpan ke: {output_file}")
     return content_list

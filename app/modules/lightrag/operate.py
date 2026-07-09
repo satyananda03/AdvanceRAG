@@ -3277,28 +3277,66 @@ async def merge_nodes_and_edges(
                 pipeline_status["latest_message"] = log_message
                 pipeline_status["history_messages"].append(log_message)
 
-            # Update storage
+            # Update storage — MERGE with any existing entry for this doc_id
+            # instead of overwriting.  ``merge_nodes_and_edges`` runs once per
+            # merge pass and multimodal ingestion executes several passes for
+            # the same doc_id (text ainsert first, then the multimodal batch
+            # merge in ``_batch_merge_lightrag_style_type_aware``, plus the
+            # Stage 3.5 modal-main entities write in ``_store_multimodal_
+            # entities_to_full_entities``).  Overwriting drops entities /
+            # relations tracked by earlier passes, and ``adelete_by_doc_id``
+            # reads only these two indices to decide what to remove — so any
+            # entity dropped here becomes a graph zombie after deletion.
+            # Union-with-existing keeps the tracking index authoritative
+            # without touching extraction, graph merge, or chunk-tracking.
             if final_entity_names:
-                await full_entities_storage.upsert(
-                    {
-                        doc_id: {
-                            "entity_names": list(final_entity_names),
-                            "count": len(final_entity_names),
-                        }
+                existing_doc_entities = await full_entities_storage.get_by_id(doc_id)
+                if isinstance(existing_doc_entities, dict):
+                    existing_names = existing_doc_entities.get("entity_names") or []
+                    merged_names = list(
+                        dict.fromkeys([*existing_names, *final_entity_names])
+                    )
+                    entities_payload = {
+                        **existing_doc_entities,
+                        "entity_names": merged_names,
+                        "count": len(merged_names),
                     }
-                )
+                else:
+                    entities_payload = {
+                        "entity_names": list(final_entity_names),
+                        "count": len(final_entity_names),
+                    }
+                await full_entities_storage.upsert({doc_id: entities_payload})
 
             if final_relation_pairs:
-                await full_relations_storage.upsert(
-                    {
-                        doc_id: {
-                            "relation_pairs": [
-                                list(pair) for pair in final_relation_pairs
-                            ],
-                            "count": len(final_relation_pairs),
-                        }
+                new_pairs_list = [list(pair) for pair in final_relation_pairs]
+                existing_doc_relations = await full_relations_storage.get_by_id(doc_id)
+                if isinstance(existing_doc_relations, dict):
+                    existing_pairs = existing_doc_relations.get("relation_pairs") or []
+                    seen_pairs: set[tuple[str, str]] = set()
+                    merged_pairs: list[list[str]] = []
+                    for pair in (*existing_pairs, *new_pairs_list):
+                        if not isinstance(pair, (list, tuple)) or len(pair) != 2:
+                            continue
+                        src, tgt = pair[0], pair[1]
+                        if src is None or tgt is None:
+                            continue
+                        key = tuple(sorted((str(src), str(tgt))))
+                        if key in seen_pairs:
+                            continue
+                        seen_pairs.add(key)
+                        merged_pairs.append([src, tgt])
+                    relations_payload = {
+                        **existing_doc_relations,
+                        "relation_pairs": merged_pairs,
+                        "count": len(merged_pairs),
                     }
-                )
+                else:
+                    relations_payload = {
+                        "relation_pairs": new_pairs_list,
+                        "count": len(new_pairs_list),
+                    }
+                await full_relations_storage.upsert({doc_id: relations_payload})
 
             logger.debug(
                 f"Updated entity-relation index for document {doc_id}: {len(final_entity_names)} entities (original: {len(processed_entities)}, added: {len(all_added_entities)}), {len(final_relation_pairs)} relations"

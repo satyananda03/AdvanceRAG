@@ -61,7 +61,6 @@ class PromptRegistry:
     def __repr__(self) -> str:
         return f"PromptRegistry({self._data!r})"
 
-
 PROMPTS = PromptRegistry()
 
 # System prompts for different analysis types
@@ -76,7 +75,11 @@ PROMPTS["IMAGE_ANALYSIS_FALLBACK_SYSTEM"] = (
     "Your response MUST contain 'detailed_description' and 'entity_info' keys."
 )
 PROMPTS["TABLE_ANALYSIS_SYSTEM"] = (
-    "ROLE : You are an expert data analyst. Provide detailed table analysis with specific insights."
+    "ROLE : You are an expert document analyst and legal/policy researcher. Provide a highly detailed and comprehensive analysis of the table content. "
+    "LANGUAGE : BAHASA INDONESIA"
+    "CRITICAL INSTRUCTION : For qualitative or text-heavy tables (such as government matrices, criteria, or regulations), YOU MUST extract and comprehensively explain the descriptions, criteria, administrative requirements, and institutional roles found in the cells. "
+    "MANDATORY EXTRACTION : You are strictly required to identify and extract all key data points. This includes exact scores, thresholds, maturity levels, legal terms, specific clauses, and exact names of institutions or functions. "
+    "Do not merely summarize or gloss over long texts. Capture the exact nuances, policy narratives, and structural relationships, as these detailed explanations and key data points are the core insights."
 )
 PROMPTS["EQUATION_ANALYSIS_SYSTEM"] = (
     "ROLE : You are an expert mathematician. Provide detailed mathematical analysis."
@@ -138,7 +141,6 @@ Follow this output format exactly :
 Output:
 </output>"""
 
-
 # Image analysis prompt with context support
 PROMPTS["vision_prompt_with_context"] = """
 You MUST respond with ONLY a valid JSON object. Do NOT include any explanation, markdown, preamble, or text outside the JSON. Do NOT wrap the JSON in code blocks.
@@ -195,7 +197,7 @@ Footnotes: {footnotes}
 # Table analysis prompt template
 PROMPTS["table_prompt"] = """
 Please analyze this table content and provide a JSON response with the following structure:
-
+LANGUAGE : Bahasa Indonesia
 {{
     "detailed_description": "A comprehensive analysis of the table including:
     - Table structure and organization
@@ -204,11 +206,14 @@ Please analyze this table content and provide a JSON response with the following
     - Statistical insights and trends
     - Relationships between data elements
     - Significance of the data presented
-    Always use specific names and values instead of general references.",
+    - Legal, policy, or governmental data points (e.g., regulations, articles, laws, official decrees)
+    - Compliance implications, sanctions, or administrative requirements (if applicable)
+    - Roles, jurisdictions, or hierarchy of government entities/institutions mentioned
+    Always use specific names, values, and legal citations (Pasal, UU, Peraturan) instead of general references.",
     "entity_info": {{
         "entity_name": "{entity_name}",
         "entity_type": "table",
-        "summary": "concise summary of the table's purpose and key findings (max 100 words)"
+        "summary": "Concise summary of the table's purpose, key findings, and its regulatory/governmental context (max 200 words)"
     }}
 }}
 
@@ -218,7 +223,7 @@ Caption: {table_caption}
 Body: {table_body}
 Footnotes: {table_footnote}
 
-Focus on extracting meaningful insights and relationships from the tabular data.
+Focus on extracting meaningful insights, relationships, and the regulatory or administrative context from the tabular data.
 """
 
 # Table analysis prompt with context support
