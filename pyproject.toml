@@ -8,16 +8,13 @@ requires-python = ">=3.10,<3.13"
 # lightrag + raganything are NOT listed here — they live as editable source
 # under app/modules/ and are injected into sys.path by run.py at startup.
 dependencies = [
-    # FastAPI server
     "fastapi>=0.108",
     "uvicorn",
     "gunicorn",
     "python-multipart>=0.0.30",
-    # Config
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
     "python-dotenv",
-    # LightRAG / RAG-Anything hard deps that aren't bundled in modules/
     "aiohttp",
     "aiofiles",
     "ascii_colors",
@@ -64,9 +61,7 @@ dependencies = [
     "pgvector>=0.4.2,<1.0.0",
     # Auth
     "python-jose[cryptography]",
-    "mineru[core]>=3.4.2",
     "llama-cloud>=2.1",
-    "byteplus-python-sdk-v2>=3.0.52",
 ]
 
 [project.optional-dependencies]
