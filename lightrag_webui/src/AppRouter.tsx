@@ -6,6 +6,7 @@ import { navigationService } from '@/services/navigation'
 import { Toaster } from 'sonner'
 import App from './App'
 import LoginPage from '@/features/LoginPage'
+import KnowledgeGraphPage from '@/features/KnowledgeGraphPage'
 import ThemeProvider from '@/components/ThemeProvider'
 
 const AppContent = () => {
@@ -53,7 +54,8 @@ const AppContent = () => {
   useEffect(() => {
     if (!initializing && !isAuthenticated) {
       const currentPath = window.location.hash.slice(1);
-      if (currentPath !== '/login') {
+      // Allow /knowledge-graph to bypass auth (it handles its own guest token)
+      if (currentPath !== '/login' && currentPath !== '/knowledge-graph') {
         console.log('Not authenticated, redirecting to login');
         navigate('/login');
       }
@@ -68,6 +70,10 @@ const AppContent = () => {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/knowledge-graph"
+        element={<KnowledgeGraphPage />}
+      />
       <Route
         path="/*"
         element={isAuthenticated ? <App /> : null}

@@ -56,6 +56,12 @@ from lightrag.chunker.token_size import (
     chunking_by_fixed_token,
     chunking_by_token_size,
 )
+from lightrag.chunker.contextualize_parent_child import (
+    chunking_parent_child,
+    contextualize_children,
+    build_parent_to_child_map,
+    redirect_source_ids,
+)
 
 __all__ = [
     "chunking_by_fixed_token",
@@ -63,4 +69,8 @@ __all__ = [
     "chunking_by_recursive_character",
     "chunking_by_semantic_vector",
     "chunking_by_token_size",
+    "chunking_parent_child",
+    "contextualize_children",
+    "build_parent_to_child_map",
+    "redirect_source_ids",
 ]

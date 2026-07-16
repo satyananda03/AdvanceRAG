@@ -2184,6 +2184,8 @@ class _PipelineMixin:
                 # ``doc_status.metadata['chunk_opts']`` via ``extraction_meta``
                 # so admin/list APIs can see the actual chunker params used.
                 chunk_opts_str: str = ""
+                #==== Flag Untuk Parent Child ====#
+                _use_parent_child: bool = False
 
                 if doc_process_opts.chunking_explicit:
                     from lightrag.chunker import (
@@ -2259,27 +2261,39 @@ class _PipelineMixin:
                             embedding_func=self.embedding_func,
                             **v_opts,
                         )
+                    # ==== Pipeline Parent Child Contextualized === #
                     else:  # "F"
-                        # F honors its own ``chunk_token_size`` override
-                        # (``addon_params['chunker']['fixed_token']`` or a
-                        # caller-supplied ``chunk_options``) exactly like
-                        # R/V/P: pop it out of the kwargs so we don't pass it
-                        # both positionally and via ``**`` splat (which would
-                        # TypeError), falling back to the shared top-level
-                        # resolved size when unset.
+                        # F strategy: Parent-Child Chunking with Contextualization.
+                        # Instead of fixed-token chunking, we split into large
+                        # parent chunks (for entity extraction) and small child
+                        # chunks (for retrieval), then contextualize children.
+                        from lightrag.chunker.contextualize_parent_child import (
+                            chunking_parent_child,
+                            contextualize_children,
+                            build_parent_to_child_map,
+                            redirect_source_ids,
+                        )
+
                         f_opts = dict(chunk_opts.get("fixed_token") or {})
                         f_chunk_size = int(
                             f_opts.pop("chunk_token_size", resolved_chunk_size)
                         )
                         chunk_opts_str = _format_chunking_params(f_chunk_size, f_opts)
-                        logger.info(f"Chunking F: {chunk_opts_str}, doc_id: {doc_id}")
-                        chunking_result = chunking_by_fixed_token(
-                            self.tokenizer,
-                            content,
-                            f_chunk_size,
-                            _emit_source_span=True,
-                            **f_opts,
+                        logger.info(f"Chunking F (parent-child), doc_id: {doc_id}")
+
+                        parent_result, child_result, parent_to_children_map = (
+                            chunking_parent_child(self.tokenizer, content)
                         )
+
+                        # Contextualize children using parent context (LLM)
+                        # Use the extract-role LLM func for contextualization
+                        _ctx_llm_func = self._build_global_config()["role_llm_funcs"].get(
+                            "extract", self.llm_model_func
+                        )
+                        contextualized_children = await contextualize_children(parent_result, child_result, _ctx_llm_func)
+                        # Flag for downstream : penanda penggunaan parent-child flow
+                        _use_parent_child = True
+                        chunking_result = contextualized_children
                 else:
                     f_opts = chunk_opts.get("fixed_token") or {}
                     # Honor the F-strategy ``chunk_token_size`` override (from
@@ -2335,7 +2349,27 @@ class _PipelineMixin:
                     )
                 if inspect.isawaitable(chunking_result):
                     chunking_result = await chunking_result
-
+                # # ═══ DEBUG: Log chunking results murni dari SemanticChunker ═══
+                # import json
+                # from pathlib import Path
+                # debug_dir = Path(self.working_dir) / "_debug_chunks_raw"
+                # debug_dir.mkdir(parents=True, exist_ok=True)
+                # debug_file = debug_dir / f"chunks_{doc_id[:12]}.json"
+                # debug_data = []
+                # for i, chunk in enumerate(chunking_result):
+                #     debug_data.append({
+                #         "index": i,
+                #         "tokens": chunk.get("tokens"),
+                #         "content_preview": chunk.get("content", "")[:200],
+                #         "content_full": chunk.get("content", ""),
+                #     })
+                # debug_file.write_text(json.dumps(debug_data, ensure_ascii=False, indent=2))
+                # logger.info(
+                #     f"[DEBUG] Chunking V complete: doc_id={doc_id}, "
+                #     f"chunks={len(chunking_result)}, "
+                #     f"saved to {debug_file}"
+                # )
+                # # ═══ END DEBUG ═══
                 if not isinstance(chunking_result, (list, tuple)):
                     raise TypeError(
                         f"chunking_func must return a list or tuple of dicts, "
@@ -2468,9 +2502,29 @@ class _PipelineMixin:
 
                     backfill_chunk_sidecars(chunking_result, blocks_path)
 
-                chunks = build_chunks_dict_from_chunking_result(
-                    chunking_result, doc_id=doc_id, file_path=file_path
-                )
+                # ═══ DEBUG: Log chunking results sebelum embedding ═══
+                # import json
+                # from pathlib import Path
+                # debug_dir = Path(self.working_dir) / "_debug_chunks_final"
+                # debug_dir.mkdir(parents=True, exist_ok=True)
+                # debug_file = debug_dir / f"chunks_{doc_id[:12]}.json"
+                # debug_data = []
+                # for i, chunk in enumerate(chunking_result):
+                #     debug_data.append({
+                #         "index": i,
+                #         "tokens": chunk.get("tokens"),
+                #         "content_preview": chunk.get("content", "")[:200],
+                #         "content_full": chunk.get("content", ""),
+                #     })
+                # debug_file.write_text(json.dumps(debug_data, ensure_ascii=False, indent=2))
+                # logger.info(
+                #     f"[DEBUG] Child Chunk complete: doc_id={doc_id}, "
+                #     f"chunks={len(chunking_result)}, "
+                #     f"saved to {debug_file}"
+                # )
+                # ═══ END DEBUG ═══
+
+                chunks = build_chunks_dict_from_chunking_result(chunking_result, doc_id=doc_id, file_path=file_path)
 
                 if not chunks:
                     logger.warning("No document chunks to process")
@@ -2481,54 +2535,148 @@ class _PipelineMixin:
                     ctx.pipeline_status, ctx.pipeline_status_lock
                 )
 
-                # Stage 1: persist doc_status PROCESSING + chunks in parallel.
-                doc_status_task = asyncio.create_task(
-                    self._upsert_doc_status_transition(
-                        doc_id=doc_id,
-                        status=DocStatus.PROCESSING,
-                        status_doc=status_doc,
-                        file_path=file_path,
-                        extra_fields={
-                            "chunks_count": len(chunks),
-                            "chunks_list": list(chunks.keys()),
-                        },
-                        metadata_extra={
-                            "process_start_time": process_start_time,
-                            **extraction_meta,
-                        },
-                    )
-                )
-                chunks_vdb_task = asyncio.create_task(self.chunks_vdb.upsert(chunks))
-                text_chunks_task = asyncio.create_task(self.text_chunks.upsert(chunks))
-                first_stage_tasks = [
-                    doc_status_task,
-                    chunks_vdb_task,
-                    text_chunks_task,
-                ]
-                entity_relation_task = None
+                # === Parent-Child Pipeline for storage & extraction === #
+                if _use_parent_child:
+                    # Build parent chunks dict (ephemeral, for extraction only)
+                    _parent_chunks_dict = build_chunks_dict_from_chunking_result(parent_result, doc_id=doc_id, file_path=file_path)
+                    # `chunks` here = child chunks (contextualized) — these get stored
+                    _child_chunks_dict = chunks
 
-                await asyncio.gather(*first_stage_tasks)
+                    # ═══ DEBUG: Log parent chunks (used for extraction) ═══
+                    # debug_dir_pc = Path(self.working_dir) / "_debug_chunks_parent"
+                    # debug_dir_pc.mkdir(parents=True, exist_ok=True)
+                    # debug_file_pc = debug_dir_pc / f"parent_{doc_id[:12]}.json"
+                    # debug_parent_data = []
+                    # for pk, pv in _parent_chunks_dict.items():
+                    #     debug_parent_data.append({
+                    #         "chunk_key": pk,
+                    #         "tokens": pv.get("tokens"),
+                    #         "content_preview": pv.get("content", "")[:200],
+                    #         "content_full": pv.get("content", ""),
+                    #     })
+                    # debug_file_pc.write_text(
+                    #     json.dumps(debug_parent_data, ensure_ascii=False, indent=2)
+                    # )
+                    # logger.info(
+                    #     f"[DEBUG] Parent chunks for extraction: doc_id={doc_id}, "
+                    #     f"parents={len(_parent_chunks_dict)}, "
+                    #     f"children={len(_child_chunks_dict)}, "
+                    #     f"saved to {debug_file_pc}"
+                    # )
+                    # ═══ END DEBUG ═══
 
-                # Stage 2: entity/relation extraction (after text_chunks are
-                # saved).  When the user opted out via process_options '!',
-                # skip extraction entirely; chunks remain in the vector
-                # store so naive / mix retrieval still works.
-                if doc_process_opts.skip_kg:
-                    logger.info(
-                        f"[skip_kg] process_options '!' set for d-id: {doc_id}; "
-                        f"skipping entity/relation extraction"
-                    )
-                    chunk_results = []
-                    extraction_meta["skip_kg"] = True
-                else:
-                    entity_relation_task = asyncio.create_task(
-                        self._process_extract_entities(
-                            chunks,
-                            ctx.pipeline_status,
-                            ctx.pipeline_status_lock,
+                    # Stage 1: store CHILD chunks + update doc_status
+                    doc_status_task = asyncio.create_task(
+                        self._upsert_doc_status_transition(
+                            doc_id=doc_id,
+                            status=DocStatus.PROCESSING,
+                            status_doc=status_doc,
+                            file_path=file_path,
+                            extra_fields={
+                                "chunks_count": len(_child_chunks_dict),
+                                "chunks_list": list(_child_chunks_dict.keys()),
+                            },
+                            metadata_extra={
+                                "process_start_time": process_start_time,
+                                **extraction_meta,
+                            },
                         )
                     )
-                    chunk_results = await entity_relation_task
+                    chunks_vdb_task = asyncio.create_task(
+                        self.chunks_vdb.upsert(_child_chunks_dict)
+                    )
+                    text_chunks_task = asyncio.create_task(
+                        self.text_chunks.upsert(_child_chunks_dict)
+                    )
+                    first_stage_tasks = [
+                        doc_status_task,
+                        chunks_vdb_task,
+                        text_chunks_task,
+                    ]
+                    entity_relation_task = None
+
+                    await asyncio.gather(*first_stage_tasks)
+
+                    # Stage 2: extract from PARENT chunks, then redirect source_ids
+                    if doc_process_opts.skip_kg:
+                        logger.info(
+                            f"[skip_kg] process_options '!' set for d-id: {doc_id}; "
+                            f"skipping entity/relation extraction"
+                        )
+                        chunk_results = []
+                        extraction_meta["skip_kg"] = True
+                    else:
+                        logger.info("Extracting Know")
+                        entity_relation_task = asyncio.create_task(
+                            self._process_extract_entities(
+                                _parent_chunks_dict,
+                                ctx.pipeline_status,
+                                ctx.pipeline_status_lock,
+                            )
+                        )
+                        chunk_results = await entity_relation_task
+
+                        # ★ CRUCIAL: redirect source_ids from parent → child
+                        _pc_map = build_parent_to_child_map(
+                            _parent_chunks_dict,
+                            _child_chunks_dict,
+                            parent_to_children_map,
+                        )
+                        redirect_source_ids(chunk_results, _pc_map)
+
+                    # Override `chunks` for downstream merge (chunks_list etc.)
+                    chunks = _child_chunks_dict
+
+                else:
+                    # Standard Flow (Recursive (R)/Semantic (V)/Paragraph (P) or legacy)
+                    # Stage 1: persist doc_status PROCESSING + chunks in parallel.
+                    doc_status_task = asyncio.create_task(
+                        self._upsert_doc_status_transition(
+                            doc_id=doc_id,
+                            status=DocStatus.PROCESSING,
+                            status_doc=status_doc,
+                            file_path=file_path,
+                            extra_fields={
+                                "chunks_count": len(chunks),
+                                "chunks_list": list(chunks.keys()),
+                            },
+                            metadata_extra={
+                                "process_start_time": process_start_time,
+                                **extraction_meta,
+                            },
+                        )
+                    )
+                    chunks_vdb_task = asyncio.create_task(self.chunks_vdb.upsert(chunks))
+                    text_chunks_task = asyncio.create_task(self.text_chunks.upsert(chunks))
+                    first_stage_tasks = [
+                        doc_status_task,
+                        chunks_vdb_task,
+                        text_chunks_task,
+                    ]
+                    entity_relation_task = None
+
+                    await asyncio.gather(*first_stage_tasks)
+
+                    # Stage 2: entity/relation extraction (after text_chunks are
+                    # saved).  When the user opted out via process_options '!',
+                    # skip extraction entirely; chunks remain in the vector
+                    # store so naive / mix retrieval still works.
+                    if doc_process_opts.skip_kg:
+                        logger.info(
+                            f"[skip_kg] process_options '!' set for d-id: {doc_id}; "
+                            f"skipping entity/relation extraction"
+                        )
+                        chunk_results = []
+                        extraction_meta["skip_kg"] = True
+                    else:
+                        entity_relation_task = asyncio.create_task(
+                            self._process_extract_entities(
+                                chunks,
+                                ctx.pipeline_status,
+                                ctx.pipeline_status_lock,
+                            )
+                        )
+                        chunk_results = await entity_relation_task
                 file_extraction_stage_ok = True
 
             except Exception as e:

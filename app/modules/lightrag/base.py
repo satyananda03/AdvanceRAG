@@ -395,6 +395,22 @@ class BaseKVStorage(StorageNameSpace, ABC):
     async def filter_keys(self, keys: set[str]) -> set[str]:
         """Return un-exist keys"""
 
+    async def get_keys_by_chunk_ids(self, chunk_ids: list[str]) -> list[str]:
+        """Find entry keys whose ``chunk_ids`` field overlaps with the given chunk IDs.
+
+        Used as fallback discovery during document deletion when the primary
+        per-document index (``full_entities`` / ``full_relations``) is empty or
+        incomplete.  If the index is missing, the chunk-tracking storages
+        (``entity_chunks`` / ``relation_chunks``) are the next most reliable
+        source of truth, and this method lets the deletion logic query them
+        by chunk ID instead of by entity/relation key.
+
+        Returns empty list by default — backends that don't implement this
+        simply skip the fallback, degrading to the original chunk-only deletion
+        behaviour rather than failing.
+        """
+        return []
+
     @abstractmethod
     async def upsert(self, data: dict[str, dict[str, Any]]) -> None:
         """Upsert data

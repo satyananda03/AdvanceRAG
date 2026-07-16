@@ -27,7 +27,11 @@ const Legend: React.FC<LegendProps> = ({ className }) => {
                 className="w-4 h-4 rounded-full"
                 style={{ backgroundColor: color }}
               />
-              <span className="text-xs truncate" title={type}>
+              <span
+                className="text-xs truncate"
+                style={{ color }}
+                title={type}
+              >
                 {t(`graphPanel.nodeTypes.${type.toLowerCase().replace(/\s+/g, '')}`, type)}
               </span>
             </div>

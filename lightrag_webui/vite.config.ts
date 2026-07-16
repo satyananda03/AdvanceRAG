@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
     // /webui → /webui/ redirect already handles this).
     base: './',
     build: {
-      outDir: path.resolve(__dirname, '../lightrag/api/webui'),
+      outDir: path.resolve(__dirname, '../app/modules/lightrag/api/webui'),
       emptyOutDir: true,
       chunkSizeWarningLimit: 3800,
       rollupOptions: {

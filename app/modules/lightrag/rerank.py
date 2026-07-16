@@ -225,6 +225,10 @@ async def generic_rerank_api(
     doc_indices = None
     original_top_n = top_n  # Save original top_n for post-aggregation limiting
 
+    # Cap top_n to number of documents to avoid API errors (e.g. Amazon Rerank rejects numberOfResults > number of sources)
+    if top_n is not None and top_n > len(documents):
+        top_n = len(documents)
+
     if enable_chunking:
         documents, doc_indices = chunk_documents_for_rerank(
             documents, max_tokens=max_tokens_per_doc

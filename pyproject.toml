@@ -1,12 +1,9 @@
 [project]
-name = "lightrag-app"
-version = "1.5.5"
-description = "Multimodal RAG application — LightRAG + RAG-Anything pipeline"
+name = "maja-ai-backend"
+version = "1.0.0"
+description = "MajaAI Backend - A Digital Government Auditor Agents"
 requires-python = ">=3.10,<3.13"
 
-# Runtime deps for the app layer (app/ package itself).
-# lightrag + raganything are NOT listed here — they live as editable source
-# under app/modules/ and are injected into sys.path by run.py at startup.
 dependencies = [
     "fastapi>=0.108",
     "uvicorn",
@@ -45,7 +42,6 @@ dependencies = [
     "tiktoken",
     "tqdm>=4.67.3",
     "xlsxwriter>=3.1.0",
-    # Document processing
     "openpyxl>=3.0.0,<4.0.0",
     "pycryptodome>=3.0.0,<4.0.0",
     "pypdf>=6.1.0",
@@ -53,15 +49,18 @@ dependencies = [
     "python-pptx>=0.6.21,<2.0.0",
     "cairosvg>=2.5.0,<3.0.0",
     "defusedxml>=0.7.0,<1.0.0",
-    # Chunking strategies
     "langchain-text-splitters>=0.3,<2",
     "langchain-experimental>=0.3.2,<1",
-    # Postgres (default storage backend)
     "asyncpg>=0.31.0,<1.0.0",
     "pgvector>=0.4.2,<1.0.0",
-    # Auth
     "python-jose[cryptography]",
     "llama-cloud>=2.1",
+    "litellm>=1.93.0rc1",
+    "langchain-openai>=1.3.5",
+    "boto3>=1.40.61",
+    "pymupdf>=1.28.0",
+    "pillow>=12.3.0",
+    "neo4j>=6.2.0",
 ]
 
 [project.optional-dependencies]
@@ -92,12 +91,9 @@ test = [
 ]
 
 [project.scripts]
-# Entry points — delegate to modules/ forks via run.py path injection
-lightrag-server = "run:main"
+majaai-backend = "run:main"
 
 [tool.setuptools.packages.find]
-# Only package the app/ layer. modules/ is NOT a Python package (no __init__.py)
-# and is injected via sys.path at runtime.
 include = ["app*"]
 exclude = ["tests*", "scripts*", "examples*", "rag_storage*", "inputs*", "output*"]
 

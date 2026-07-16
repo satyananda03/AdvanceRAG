@@ -938,50 +938,27 @@ class ProcessorMixin:
             """Process single item using the correct processor for its type"""
             nonlocal completed_count
             content_type = item.get("type", "unknown")
-            self.logger.info(
-                f"[Item {index}/{total_items}] Waiting for semaphore (type={content_type})"
-            )
+            # self.logger.info(f"[Item {index}/{total_items}] Waiting for semaphore (type={content_type})")
             async with semaphore:
-                self.logger.info(
-                    f"[Item {index}/{total_items}] Acquired semaphore, starting (type={content_type})"
-                )
+                # self.logger.info(f"[Item {index}/{total_items}] Acquired semaphore, starting (type={content_type})")
                 try:
                     # Select the correct processor based on content type
-                    processor = get_processor_for_type(
-                        self.modal_processors, content_type
-                    )
+                    processor = get_processor_for_type(self.modal_processors, content_type)
 
                     if not processor:
-                        self.logger.warning(
-                            f"No processor found for type: {content_type}"
-                        )
+                        self.logger.warning(f"No processor found for type: {content_type}")
                         return None
-
                     item_info = {
                         "page_idx": item.get("page_idx", 0),
                         "index": item.get("_content_list_index", index),
                         "type": content_type,
                     }
-
-                    import time as _time
-                    _t0 = _time.time()
-
-                    # Call the correct processor's description generation method
-                    (
-                        description,
-                        entity_info,
-                    ) = await processor.generate_description_only(
+                    (description, entity_info) = await processor.generate_description_only(
                         modal_content=item,
                         content_type=content_type,
                         item_info=item_info,
                         entity_name=None,  # Let LLM auto-generate
                     )
-
-                    _elapsed = _time.time() - _t0
-                    self.logger.info(
-                        f"[Item {index}/{total_items}] Completed in {_elapsed:.1f}s (type={content_type})"
-                    )
-
                     # Update progress (non-blocking)
                     async with progress_lock:
                         completed_count += 1
@@ -993,7 +970,6 @@ class ProcessorMixin:
                             self.logger.info(
                                 f"Multimodal chunk generation progress: {completed_count}/{total_items} ({progress_percent:.1f}%)"
                             )
-
                     return {
                         "index": index,
                         "content_type": content_type,
@@ -1015,13 +991,9 @@ class ProcessorMixin:
                             or completed_count == total_items
                         ):
                             progress_percent = (completed_count / total_items) * 100
-                            self.logger.info(
-                                f"Multimodal chunk generation progress: {completed_count}/{total_items} ({progress_percent:.1f}%)"
-                            )
+                            self.logger.info(f"Multimodal chunk generation progress: {completed_count}/{total_items} ({progress_percent:.1f}%)")
 
-                    self.logger.error(
-                        f"Error generating description for {content_type} item {index}: {e}"
-                    )
+                    self.logger.error(f"Error generating description for {content_type} item {index}: {e}")
                     return None
 
         # Process all items concurrently with correct processors
@@ -1067,6 +1039,10 @@ class ProcessorMixin:
         # Track chunk IDs for doc_status update
         chunk_ids = list(lightrag_chunks.keys())
 
+        # Stage 3.7: Register chunk IDs in doc_status BEFORE entity extraction
+        # This ensures chunks are deletable even if later stages fail
+        await self._update_doc_status_with_chunks_type_aware(doc_id, chunk_ids)
+
         # Stage 4: Use LightRAG's batch entity relation extraction
         chunk_results = await self._batch_extract_entities_lightrag_style_type_aware(
             lightrag_chunks
@@ -1081,9 +1057,6 @@ class ProcessorMixin:
         await self._batch_merge_lightrag_style_type_aware(
             enhanced_chunk_results, file_path, doc_id
         )
-
-        # Stage 7: Update doc_status with integrated chunks_list
-        await self._update_doc_status_with_chunks_type_aware(doc_id, chunk_ids)
 
     def _convert_to_lightrag_chunks_type_aware(
         self, multimodal_data_list: List[Dict[str, Any]], file_path: str, doc_id: str
@@ -1109,6 +1082,17 @@ class ProcessorMixin:
 
             # Calculate tokens
             tokens = len(self.lightrag.tokenizer.encode(formatted_chunk_content))
+
+            # # DEBUG: Print the exact chunk that will be embedded and entity-extracted
+            # self.logger.info("\n" + "="*70)
+            # self.logger.info(f"📦 DEBUG: CHUNK TO BE EMBEDDED & ENTITY-EXTRACTED")
+            # self.logger.info(f"   type       : {content_type}")
+            # self.logger.info(f"   chunk_id   : {chunk_id}")
+            # self.logger.info(f"   tokens     : {tokens}")
+            # self.logger.info(f"   entity_name: {entity_info['entity_name']}")
+            # self.logger.info(f"{'─'*70}")
+            # self.logger.info(f"[CHUNK CONTENT]:\n{formatted_chunk_content}")
+            # self.logger.info("="*70 + "\n")
 
             # Use full path or basename based on config
             file_ref = self._get_file_reference(file_path)
@@ -1151,7 +1135,8 @@ class ProcessorMixin:
 
         try:
             if content_type == "image":
-                image_path = original_item.get("img_path", "")
+                # Prefer _original_url (persistent S3 URL) over img_path (tmp local path)
+                image_path = original_item.get("_original_url") or original_item.get("img_path", "")
                 captions = normalize_caption_list(
                     original_item.get(
                         "image_caption", original_item.get("img_caption", [])

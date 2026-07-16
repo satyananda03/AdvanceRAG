@@ -7,6 +7,7 @@ import useLightragGraph from '@/hooks/useLightragGraph'
 import { useTranslation } from 'react-i18next'
 import { GitBranchPlus, Scissors, Lock } from 'lucide-react'
 import EditablePropertyRow from './EditablePropertyRow'
+import { useGraphReadonly } from '@/contexts/GraphReadonlyContext'
 
 /**
  * Component that view properties of elements in graph.
@@ -190,6 +191,8 @@ const PropertyRow = ({
   pipelineBusy?: boolean
 }) => {
   const { t } = useTranslation()
+  const readonly = useGraphReadonly()
+  const effectiveEditable = isEditable && !readonly
 
   const getPropertyNameTranslation = (name: string) => {
     const translationKey = `graphPanel.propertiesView.node.propertyNames.${name}`
@@ -215,7 +218,7 @@ const PropertyRow = ({
   }
 
   // Use EditablePropertyRow for editable fields (description, entity_id and entity_type)
-  if (isEditable && (name === 'description' || name === 'entity_id' || name === 'entity_type'  || name === 'keywords')) {
+  if (effectiveEditable && (name === 'description' || name === 'entity_id' || name === 'entity_type'  || name === 'keywords')) {
     return (
       <EditablePropertyRow
         name={name}

@@ -1298,7 +1298,7 @@ def create_app(args):
                 )
 
     base_description = (
-        "Providing API for LightRAG core, Web UI and Ollama Model Emulation"
+        ""
     )
     swagger_description = (
         base_description
@@ -1312,7 +1312,7 @@ def create_app(args):
     webui_path = WEBUI_PATH
 
     app_kwargs = {
-        "title": "LightRAG Server API",
+        "title": "MajaAI Backend API",
         "description": swagger_description,
         "version": __api_version__,
         "openapi_url": "/openapi.json",

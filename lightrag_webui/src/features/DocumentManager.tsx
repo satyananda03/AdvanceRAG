@@ -1370,7 +1370,7 @@ export default function DocumentManager() {
   return (
     <Card className="!rounded-none !overflow-hidden flex flex-col h-full min-h-0">
       <CardHeader className="py-2 px-6">
-        <CardTitle className="text-lg">{t('documentPanel.documentManager.title')}</CardTitle>
+        <CardTitle className="text-lg">{t('Document Management')}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0 overflow-auto">
         <div className="flex justify-between items-center gap-2 mb-2">

@@ -221,7 +221,6 @@ _VECTOR_INDEX_SUFFIXES = [
     "vchordrq_cosine",
 ]
 
-
 def _safe_index_name(table_name: str, index_suffix: str) -> str:
     """
     Generate a PostgreSQL-safe index name that won't be truncated.
@@ -327,6 +326,12 @@ class PostgreSQLDB:
 
         # Server settings
         self.server_settings = config.get("server_settings")
+
+        # Schema configuration — defaults to "rag". All lightrag tables are
+        # created inside this schema. The search_path GUC is set both at pool
+        # creation (server_settings) and restored after every pool reset so
+        # that unqualified table names always resolve to this schema.
+        self.schema_name: str = config.get("schema_name") or "rag"
 
         # Statement LRU cache size (keep as-is, allow None for optional configuration)
         self.statement_cache_size = config.get("statement_cache_size")
@@ -469,6 +474,8 @@ class PostgreSQLDB:
             logger.info(f"PostgreSQL, SSL mode set to: {self.ssl_mode}")
 
         # Add server settings if provided
+        # Always inject search_path for our target schema so unqualified table
+        # names resolve correctly on every new connection.
         if self.server_settings:
             try:
                 settings = {}
@@ -478,6 +485,8 @@ class PostgreSQLDB:
                     if "=" in pair:
                         key, value = pair.split("=", 1)
                         settings[key] = value
+                # Ensure search_path includes our schema
+                settings.setdefault("search_path", f"{self.schema_name},public")
                 if settings:
                     connection_params["server_settings"] = settings
                     logger.info(f"PostgreSQL, Server settings applied: {settings}")
@@ -485,6 +494,10 @@ class PostgreSQLDB:
                 logger.warning(
                     f"PostgreSQL, Failed to parse server_settings: {self.server_settings}, error: {e}"
                 )
+        else:
+            # No explicit server_settings — set search_path to target schema
+            connection_params["server_settings"] = {"search_path": f"{self.schema_name},public"}
+            logger.info(f"PostgreSQL, search_path set to: {self.schema_name}")
 
         wait_strategy = (
             wait_exponential(
@@ -542,6 +555,16 @@ class PostgreSQLDB:
                 )
                 raise
 
+            # RESET ALL clears all session GUCs including search_path.
+            # Restore it so subsequent queries resolve to the correct schema.
+            try:
+                await self._restore_search_path(connection)
+            except Exception as e:
+                logger.error(
+                    f"[{self.workspace}] Failed to restore search_path after pool reset: {e}"
+                )
+                raise
+
             # RESET ALL clears session GUCs; restore VCHORDRQ values afterward.
             if self.enable_vector and self.vector_index_type == "VCHORDRQ":
                 try:
@@ -568,25 +591,25 @@ class PostgreSQLDB:
                     raise
 
         async def _create_pool_once() -> None:
-            # STEP 1: Bootstrap - ensure vector extension exists BEFORE pool creation.
-            # On a fresh database, register_vector() in _init_connection will fail
-            # if the vector extension doesn't exist yet, because the 'vector' type
-            # won't be found in pg_catalog. We must create the extension first
-            # using a standalone bootstrap connection.
-            # Skip this step if vector support is not enabled.
-            if self.enable_vector:
-                bootstrap_conn = await asyncpg.connect(
-                    user=self.user,
-                    password=self.password,
-                    database=self.database,
-                    host=self.host,
-                    port=self.port,
-                    ssl=connection_params.get("ssl"),
-                )
-                try:
+            # STEP 1: Bootstrap - ensure target schema and vector extension exist
+            # BEFORE pool creation. On a fresh database, register_vector() in
+            # _init_connection will fail if the vector extension doesn't exist yet.
+            # We also create the target schema here so DDL in check_tables() lands
+            # in the correct schema.
+            bootstrap_conn = await asyncpg.connect(
+                user=self.user,
+                password=self.password,
+                database=self.database,
+                host=self.host,
+                port=self.port,
+                ssl=connection_params.get("ssl"),
+            )
+            try:
+                await self._ensure_schema(bootstrap_conn)
+                if self.enable_vector:
                     await self.configure_vector_extension(bootstrap_conn)
-                finally:
-                    await bootstrap_conn.close()
+            finally:
+                await bootstrap_conn.close()
 
             # STEP 2: Now safe to create pool with register_vector callback.
             # The vector extension is guaranteed to exist at this point (if enabled).
@@ -759,6 +782,33 @@ class PostgreSQLDB:
         return (
             f"pool_state[min={min_size}, max={max_size}, holders={total_holders}, "
             f"acquired={acquired_count}, idle={idle_count}, waiting={waiting_count}]"
+        )
+
+    async def _ensure_schema(self, connection: asyncpg.Connection) -> None:
+        """Create the target schema if it does not exist.
+
+        Called once during bootstrap (before pool creation) so all subsequent
+        DDL statements issued by check_tables() land in the correct schema.
+        """
+        try:
+            await connection.execute(
+                f"CREATE SCHEMA IF NOT EXISTS {self.schema_name}"
+            )
+            logger.info(f"PostgreSQL, Schema '{self.schema_name}' ensured")
+        except Exception as e:
+            logger.error(f"PostgreSQL, Failed to create schema '{self.schema_name}': {e}")
+            raise
+
+    async def _restore_search_path(self, connection: asyncpg.Connection) -> None:
+        """Restore search_path to the configured schema after RESET ALL.
+
+        RESET ALL clears all session GUCs including search_path. asyncpg's
+        server_settings are only applied on initial connection creation, NOT
+        after a pool reset. This method must be called in _reset_connection
+        to ensure subsequent queries resolve to the correct schema.
+        """
+        await connection.execute(
+            f"SET search_path TO {self.schema_name}, public"
         )
 
     async def configure_vector_extension(self, connection: asyncpg.Connection) -> None:
@@ -2309,7 +2359,11 @@ class ClientManager:
     def get_config(vector_storage: str | None = None) -> dict[str, Any]:
         config = configparser.ConfigParser()
         config.read("config.ini", "utf-8")
-
+        database = os.environ.get(
+                "POSTGRES_DATABASE",
+                config.get("postgres", "database", fallback="postgres"),
+            )
+        logger.info(f"Database : {database}")
         return {
             "host": os.environ.get(
                 "POSTGRES_HOST",
@@ -2450,6 +2504,12 @@ class ClientManager:
                         config.get("postgres", "pool_close_timeout", fallback=5.0),
                     )
                 ),
+            ),
+            # Schema name — all lightrag tables are created inside this schema.
+            # Defaults to "rag" if not explicitly set.
+            "schema_name": os.environ.get(
+                "POSTGRES_SCHEMA",
+                config.get("postgres", "schema_name", fallback="rag"),
             ),
         }
 
@@ -2909,6 +2969,52 @@ class PGKVStorage(BaseKVStorage):
                 f"[{self.workspace}] PostgreSQL database,\nsql:{sql},\nparams:{params},\nerror:{e}"
             )
             raise
+
+    async def get_keys_by_chunk_ids(self, chunk_ids: list[str]) -> list[str]:
+        """Find keys in chunk-tracking tables whose ``chunk_ids`` JSONB array
+        overlaps with the given chunk IDs.
+
+        Only applies to ``entity_chunks`` and ``relation_chunks`` namespaces;
+        returns an empty list for all other namespaces.  Uses the PostgreSQL
+        JSONB ``?|`` operator (array-overlap test) so the scan is workspace-
+        scoped and avoids a Python-side filter over the full table.
+
+        Graceful degradation: any error is logged and an empty list is
+        returned so that the deletion fallback degrades to the original
+        chunk-only behaviour instead of failing the whole delete.
+        """
+        if not chunk_ids:
+            return []
+
+        if not (
+            is_namespace(self.namespace, NameSpace.KV_STORE_ENTITY_CHUNKS)
+            or is_namespace(self.namespace, NameSpace.KV_STORE_RELATION_CHUNKS)
+        ):
+            return []
+
+        table_name = namespace_to_table_name(self.namespace)
+        if not table_name:
+            logger.error(
+                f"[{self.workspace}] Unknown namespace for chunk-id lookup: {self.namespace}"
+            )
+            return []
+
+        sql = (
+            f"SELECT id FROM {table_name} "
+            f"WHERE workspace=$1 AND chunk_ids ?| $2::text[]"
+        )
+        params = {"workspace": self.workspace, "ids": chunk_ids}
+        try:
+            res = await self.db.query(sql, list(params.values()), multirows=True)
+            if res:
+                return [row["id"] for row in res]
+            return []
+        except Exception as e:
+            logger.error(
+                f"[{self.workspace}] get_keys_by_chunk_ids failed for "
+                f"{self.namespace},\nsql:{sql},\nparams:{params},\nerror:{e}"
+            )
+            return []
 
     ################ INSERT METHODS ################
     async def upsert(self, data: dict[str, dict[str, Any]]) -> None:

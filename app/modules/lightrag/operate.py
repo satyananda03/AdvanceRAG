@@ -517,7 +517,7 @@ def _handle_single_entity_extraction(
         entity_name = sanitize_and_normalize_extracted_text(
             record_attributes[1], remove_inner_quotes=True
         )
-
+        entity_name = entity_name.title()
         # Validate entity name after all cleaning steps
         if not entity_name or not entity_name.strip():
             logger.info(
@@ -606,9 +606,11 @@ def _handle_single_relationship_extraction(
         source = sanitize_and_normalize_extracted_text(
             record_attributes[1], remove_inner_quotes=True
         )
+        source = source.title()
         target = sanitize_and_normalize_extracted_text(
             record_attributes[2], remove_inner_quotes=True
         )
+        target = target.title()
 
         # Validate entity names after all cleaning steps
         if not source:
@@ -770,6 +772,7 @@ async def _process_json_extraction_result(
             entity_name = sanitize_and_normalize_extracted_text(
                 str(entity_data.get("name", "")), remove_inner_quotes=True
             )
+            entity_name = entity_name.title()
             if not entity_name or not entity_name.strip():
                 logger.info(
                     f"{chunk_key}: Empty entity name found after sanitization in JSON result"
@@ -838,10 +841,11 @@ async def _process_json_extraction_result(
             source = sanitize_and_normalize_extracted_text(
                 str(rel_data.get("source", "")), remove_inner_quotes=True
             )
+            source = source.title()
             target = sanitize_and_normalize_extracted_text(
                 str(rel_data.get("target", "")), remove_inner_quotes=True
             )
-
+            target = target.title()
             if not source:
                 logger.info(
                     f"{chunk_key}: Empty source entity in JSON relationship result"
@@ -2048,7 +2052,10 @@ async def _merge_nodes_then_upsert(
             if existing_desc:
                 already_description.extend(existing_desc.split(GRAPH_FIELD_SEP))
 
-        new_source_ids = [dp["source_id"] for dp in nodes_data if dp.get("source_id")]
+        new_source_ids = []
+        for dp in nodes_data:
+            if dp.get("source_id"):
+                new_source_ids.extend(dp["source_id"].split(GRAPH_FIELD_SEP))
 
         existing_full_source_ids = []
         if entity_chunks_storage is not None:
@@ -2389,7 +2396,10 @@ async def _merge_edges_then_upsert(
                         )
                     )
 
-        new_source_ids = [dp["source_id"] for dp in edges_data if dp.get("source_id")]
+        new_source_ids = []
+        for dp in edges_data:
+            if dp.get("source_id"):
+                new_source_ids.extend(dp["source_id"].split(GRAPH_FIELD_SEP))
 
         storage_key = make_relation_chunk_key(src_id, tgt_id)
         existing_full_source_ids = []

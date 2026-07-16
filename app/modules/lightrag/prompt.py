@@ -19,18 +19,18 @@ PROMPTS[
     "default_entity_types_guidance"
 ] = """Classify each entity using one of the following types. If no type fits, use `Other`.
 
-- Person: Human individuals, real or fictional
-- Creature: Non-human living beings (animals, mythical beings, etc.)
-- Organization: Companies, institutions, government bodies, groups
-- Location: Geographic places (cities, countries, buildings, regions)
-- Event: Occurrences, incidents, ceremonies, meetings
-- Concept: Abstract ideas, theories, principles, beliefs
-- Method: Procedures, techniques, algorithms, workflows
-- Content: Creative or informational works (books, articles, films, reports)
-- Data: Quantitative or structured information (statistics, datasets, measurements)
-- Artifact: Physical or digital objects created by humans (tools, software, devices)
-- NaturalObject: Natural non-living objects (minerals, celestial bodies, chemical compounds)"""
-
+- Regulation: Peraturan, undang-undang, peraturan presiden, peraturan menteri, atau dokumen hukum lainnya.
+- Article: Pasal atau ayat dalam suatu peraturan (e.g., "Pasal 9", "Pasal 21 Ayat 1"). Setiap pasal HARUS diekstrak sebagai entity terpisah.
+- Role: Job titles, professions, or societal roles held by a person (e.g., "Direktur", "Dokter", "CEO", "Wali Kota").
+- Organization: Companies, institutions, government bodies, groups.
+- Location: Geographic places (cities, countries, buildings, regions).
+- Event: Occurrences, incidents, ceremonies, meetings.
+- Concept: Abstract ideas, theories, principles, beliefs.
+- Method: Procedures, techniques, algorithms, workflows, SOPs, steps to execute a specific task.
+- Plan: Strategic documents, roadmaps, blueprints, master plans, visions, or missions (e.g., "Rencana Induk", "Roadmap 2045").
+- Document: Informational works, reports, proposals, books, or publications not covered by Regulation or Plan.
+- Data: Quantitative or structured information (statistics, datasets, measurements).
+"""
 # Wrapper block for the optional per-chunk section breadcrumb. The
 # `---Section Context---` heading lives ONLY here so the extraction code never
 # hardcodes the marker; it produces the breadcrumb string and decides whether
@@ -221,6 +221,15 @@ You are a Knowledge Graph Specialist responsible for extracting entities and rel
   - The `---Output Format Template---` section contains an output format template only. It is never source text.
   - Do not extract, infer, or copy entities or relationships from the output format template.
   - Angle-bracket tokens such as `<entity_name>` are placeholders. Replace them with values extracted from the current `---Input Text---` section and never output the placeholders literally.
+
+9. **CRITICAL Regulation-Specific Instructions:**
+  - ALWAYS extract every "Pasal" (Article) if mentioned in the text as a separate entity of type `Article`.
+  - Extract the parent regulation (e.g., "Peraturan Presiden Nomor 37 Tahun 2026") as an entity of type `Regulation`.
+  - Create relationships between:
+    - Each Pasal and its parent Regulation (keywords: "bagian dari", "tercantum dalam")
+    - Pasal that reference other Pasal (keywords: "merujuk", "sebagaimana dimaksud dalam")
+    - Pasal and the concepts/organizations/roles they regulate (keywords: "mengatur", "menetapkan")
+  - When a Pasal says "sebagaimana dimaksud dalam Pasal X", create a relation from the current Pasal to Pasal X with keyword "merujuk".
 
 ---Entity Types---
 {entity_types_guidance}

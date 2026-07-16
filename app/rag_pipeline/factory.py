@@ -1,34 +1,42 @@
-"""Assemble ``LightRAG`` + ``RAGAnything`` from ``PipelineSettings``.
-
-Public entry point is :func:`build_pipeline`, an async context manager that
-yields a ready-to-use ``RAGAnything`` instance and guarantees storage
-finalisation on exit.
-
-Rationale for a single builder:
-
-* Every downstream caller (LangGraph agent, FastAPI server, CLI) uses the same
-  initialization / teardown path, so bugs get fixed once.
-* Model funcs are built once and shared by both frameworks, avoiding
-  duplicated OpenAI client state.
-"""
-
+"""Assemble ``LightRAG`` + ``RAGAnything`` from ``PipelineSettings``"""
 from __future__ import annotations
-
 from contextlib import asynccontextmanager
 from typing import Any, AsyncIterator, Dict, Optional
-
 from app.modules.lightrag import LightRAG
-from app.modules.lightrag.kg.shared_storage import initialize_pipeline_status
 from app.modules.lightrag.utils import logger
 from app.modules.raganything import RAGAnything, RAGAnythingConfig
-
+from raganything.parser import Parser, register_parser, get_parser
 from app.core.config import PipelineSettings
-from app.rag_pipeline.model_funcs import (
-    build_embedding_func,
-    build_llm_func,
-    build_vision_func,
-)
+from app.rag_pipeline.model_funcs import (build_embedding_func, build_llm_func, build_vision_func)
+import os
+import raganything.utils as _rag_utils
+import raganything.processor as _rag_processor
 
+_CHUNK_STRATEGY = os.getenv("LIGHTRAG_CHUNK_STRATEGY", "F").strip().upper()
+
+class _CustomParseAdapter(Parser):
+    def check_installation(self) -> bool:
+        return True
+    def parse_document(self, file_path, output_dir=None, **kwargs):
+        raise NotImplementedError("CustomParseAdapter is a stub — parsing happens before insert_content_list.")
+
+register_parser("custom", _CustomParseAdapter)
+
+async def _insert_text_content_via_pipeline(lightrag, input, split_by_character=None, split_by_character_only=False, ids=None, file_paths=None):
+    """Enqueue text via the pipeline so ``process_options`` can select Fixed/Recursive/Semantic/Paragraph."""
+    _rag_utils.logger.info(f"Starting text content insertion into LightRAG (strategy={_CHUNK_STRATEGY})...")
+    await lightrag.apipeline_enqueue_documents(
+        input=input,
+        ids=ids,
+        file_paths=file_paths,
+        process_options=_CHUNK_STRATEGY,
+    )
+    await lightrag.apipeline_process_enqueue_documents()
+    _rag_utils.logger.info("Text content insertion complete")
+
+# Patch both the definition site and processor's imported reference.
+_rag_utils.insert_text_content = _insert_text_content_via_pipeline
+_rag_processor.insert_text_content = _insert_text_content_via_pipeline
 
 def _build_rag_anything_config(settings: PipelineSettings) -> RAGAnythingConfig:
     """Project ``PipelineSettings`` onto ``RAGAnythingConfig``."""
@@ -44,10 +52,7 @@ def _build_rag_anything_config(settings: PipelineSettings) -> RAGAnythingConfig:
 
 
 def _build_lightrag_kwargs(settings: PipelineSettings) -> Dict[str, Any]:
-    """Project ``PipelineSettings`` onto ``LightRAG`` kwargs.
-
-    Keeps the constructor call site trivial: ``LightRAG(**kwargs)``.
-    """
+    """Project ``PipelineSettings`` onto ``LightRAG`` kwargs."""
     kwargs: Dict[str, Any] = {
         "working_dir": settings.working_dir,
         "workspace": settings.workspace,
@@ -69,37 +74,17 @@ async def _construct_lightrag(settings: PipelineSettings) -> LightRAG:
     """Build a ``LightRAG`` instance and initialize its storages + pipeline."""
     llm_func = build_llm_func(settings)
     embedding_func = build_embedding_func(settings)
-
     rag = LightRAG(
         **_build_lightrag_kwargs(settings),
         llm_model_func=llm_func,
         embedding_func=embedding_func,
     )
     await rag.initialize_storages()
-    await initialize_pipeline_status()
     return rag
 
-
 @asynccontextmanager
-async def build_pipeline(
-    settings: Optional[PipelineSettings] = None,
-    *,
-    lightrag: Optional[LightRAG] = None,
-) -> AsyncIterator[RAGAnything]:
-    """Async context manager yielding a ready ``RAGAnything`` instance.
-
-    Args:
-        settings: pipeline settings. Defaults to ``PipelineSettings()`` which
-            loads from ``.env``.
-        lightrag: reuse an existing initialized LightRAG (e.g. the one the
-            FastAPI server already built). When ``None``, a new one is built.
-
-    Example::
-
-        async with build_pipeline() as rag:
-            await rag.process_document_complete("./doc.pdf")
-            answer = await rag.aquery("summarize", mode="mix")
-    """
+async def build_pipeline(settings: Optional[PipelineSettings] = None, *, lightrag: Optional[LightRAG] = None) -> AsyncIterator[RAGAnything]:
+    """Async context manager yielding a ready ``RAGAnything`` instance."""
     settings = settings or PipelineSettings()
     settings.require()
 
@@ -120,14 +105,8 @@ async def build_pipeline(
     finally:
         try:
             if owns_lightrag:
-                # We built the LightRAG, so finalize everything RAGAnything
-                # touches (its caches + the underlying LightRAG storages).
                 await rag.finalize_storages()
             else:
-                # The caller owns the injected LightRAG's lifecycle (e.g. the
-                # dashboard server's lifespan). Finalize only the extra caches
-                # RAGAnything created so we never double-finalize the shared
-                # LightRAG storages.
                 for cache in (
                     getattr(rag, "parse_cache", None),
                     getattr(rag, "multimodal_status_cache", None),
@@ -135,6 +114,4 @@ async def build_pipeline(
                     if cache is not None:
                         await cache.finalize()
         except Exception:
-            # ``finalize_storages`` may run during interpreter shutdown; log
-            # but never mask an in-flight exception.
             logger.debug("finalize_storages raised on shutdown", exc_info=True)

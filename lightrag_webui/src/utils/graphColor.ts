@@ -142,34 +142,37 @@ const TYPE_SYNONYMS: Record<string, string> = {
   地域: 'location'
 }
 
+// Softer, muted pastel palette tuned for a dark background: lighter and less
+// saturated than the original so nodes don't glare on black, and so the same
+// color reads well when reused as the label text color.
 const NODE_TYPE_COLORS: Record<string, string> = {
-  person: '#4169E1',
-  creature: '#bd7ebe',
-  organization: '#00cc00',
-  location: '#cf6d17',
-  event: '#00bfa0',
-  concept: '#e3493b',
-  method: '#b71c1c',
-  content: '#0f558a',
-  data: '#0000ff',
-  artifact: '#4421af',
-  naturalobject: '#b2e061',
-  other: '#f4d371',
-  unknown: '#b0b0b0'
+  person: '#2CAAE5',
+  creature: '#cc9bd6',
+  organization: '#2CE5B3',
+  location: '#FB2020',
+  event: '#A7F45A',
+  concept: '#FF2B67',
+  method: '#FF5858',
+  content: '#268FFF',
+  data: '#264EFF',
+  artifact: '#21759B',
+  naturalobject: '#bcd98a',
+  other: '#efd98a',
+  unknown: '#00A3AC'
 }
 
 const EXTENDED_COLORS = [
-  '#84a3e1',
-  '#5a2c6d',
-  '#2F4F4F',
-  '#003366',
-  '#9b3a31',
-  '#00CED1',
-  '#b300b3',
-  '#0f705d',
-  '#ff99cc',
-  '#6ef7b3',
-  '#cd071e'
+  '#FF2B67',
+  '#2CAAE5',
+  '#2CE5B3',
+  '#268FFF',
+  '#264EFF',
+  '#A7F45A',
+  '#FB2020',
+  '#FF5858',
+  '#21759B',
+  '#00A3AC',
+  '#cc9bd6'
 ]
 
 const PREDEFINED_COLOR_SET = new Set(Object.values(NODE_TYPE_COLORS))

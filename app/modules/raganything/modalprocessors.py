@@ -9,6 +9,7 @@ Includes:
 - GenericModalProcessor: Processor for other modal content
 """
 
+import os
 import re
 import json
 import time
@@ -34,6 +35,197 @@ from raganything.utils import (
     get_table_body,
     normalize_caption_list,
 )
+
+# ENV-configurable token limits for leading/trailing context
+LEADING_CONTEXT_TOKENS = int(os.environ.get("LEADING_CONTEXT_TOKENS", "500"))
+TRAILING_CONTEXT_TOKENS = int(os.environ.get("TRAILING_CONTEXT_TOKENS", "500"))
+
+# Separator hierarchy for recursive chunk splitting (from coarse to fine)
+_SPLIT_SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
+
+
+def _truncate_by_separators(text: str, max_tokens: int, tokenizer, direction: str = "tail") -> str:
+    """Truncate text respecting separator hierarchy for clean breaks.
+
+    Uses a recursive-chunk approach: try the coarsest separator first ("\n\n"),
+    then "\n", then ". ", then " ", and finally character-level as last resort.
+
+    Args:
+        text: Input text to truncate.
+        max_tokens: Maximum number of tokens allowed.
+        tokenizer: Tokenizer instance with encode/decode methods.
+        direction: "tail" keeps the last max_tokens (for leading text),
+                   "head" keeps the first max_tokens (for trailing text).
+
+    Returns:
+        Truncated text that fits within max_tokens.
+    """
+    if not text:
+        return ""
+
+    tokens = tokenizer.encode(text)
+    if len(tokens) <= max_tokens:
+        return text
+
+    # Start with the raw truncated text as baseline
+    if direction == "tail":
+        # Keep the END of text (closest to the multimodal item) = leading text
+        raw_tokens = tokens[-max_tokens:]
+    else:
+        # Keep the START of text (closest to the multimodal item) = trailing text
+        raw_tokens = tokens[:max_tokens]
+
+    raw_text = tokenizer.decode(raw_tokens)
+
+    # Try each separator from coarsest to finest to find a clean break
+    for sep in _SPLIT_SEPARATORS:
+        if not sep:
+            # Empty separator = character-level, just return raw
+            return raw_text
+
+        if direction == "tail":
+            # Find the first occurrence of separator in truncated text
+            # and cut there to get a clean start
+            idx = raw_text.find(sep)
+            if idx != -1 and idx < len(raw_text) * 0.5:
+                candidate = raw_text[idx + len(sep):]
+                if candidate.strip():
+                    return candidate.strip()
+        else:
+            # Find the last occurrence of separator in truncated text
+            # and cut there to get a clean end
+            idx = raw_text.rfind(sep)
+            if idx != -1 and idx > len(raw_text) * 0.5:
+                candidate = raw_text[:idx + len(sep)]
+                if candidate.strip():
+                    return candidate.strip()
+
+    return raw_text.strip()
+
+
+def _extract_text_from_item_for_context(item: Dict, include_headers: bool = True) -> str:
+    """Extract text from a content list item for leading/trailing context.
+
+    Supports 'text', 'table', and 'equation' types. Images are excluded per requirement.
+
+    Args:
+        item: Content item dict from content_list.
+        include_headers: Whether to prefix heading markers.
+
+    Returns:
+        Extracted text string (empty string if item should be skipped).
+    """
+    item_type = item.get("type", "")
+
+    if item_type == "text":
+        text = item.get("text", "")
+        text_level = item.get("text_level", 0)
+        if include_headers and text_level > 0:
+            return f"{'#' * text_level} {text}"
+        return text
+
+    elif item_type == "table":
+        # Include table content so adjacent tables serve as context
+        table_body = item.get("table_body", "")
+        if isinstance(table_body, list):
+            # table_body may be a list of rows
+            rows = []
+            for row in table_body:
+                if isinstance(row, list):
+                    rows.append(" | ".join(str(cell) for cell in row))
+                else:
+                    rows.append(str(row))
+            table_body = "\n".join(rows)
+        elif isinstance(table_body, dict):
+            table_body = json.dumps(table_body, ensure_ascii=False)
+
+        caption = item.get("table_caption", [])
+        if isinstance(caption, list):
+            caption = ", ".join(str(c) for c in caption)
+
+        parts = []
+        if caption:
+            parts.append(f"[Table: {caption}]")
+        if table_body:
+            parts.append(str(table_body))
+        return "\n".join(parts)
+
+    elif item_type == "equation":
+        # Include equation content so adjacent equations serve as context
+        equation_text = item.get("equation", item.get("text", ""))
+        equation_format = item.get("equation_format", item.get("format", ""))
+        parts = []
+        if equation_format:
+            parts.append(f"[Equation ({equation_format})]")
+        if equation_text:
+            parts.append(str(equation_text))
+        return " ".join(parts) if parts else ""
+
+    # Images and other types are explicitly excluded per requirement
+    return ""
+
+
+def extract_leading_trailing_context(
+    content_list: List[Dict],
+    current_item_info: Dict[str, Any],
+    tokenizer,
+    leading_tokens: int = None,
+    trailing_tokens: int = None,
+) -> Tuple[str, str]:
+    """Extract leading text and trailing text separately from content_list.
+
+    Leading Text = content that appears BEFORE the current multimodal item.
+    Trailing Text = content that appears AFTER the current multimodal item.
+
+    Rules:
+    - Token limits are configurable via ENV (LEADING_CONTEXT_TOKENS, TRAILING_CONTEXT_TOKENS).
+    - Truncation uses separator hierarchy ["\n\n", "\n", ". ", " ", ""] for clean breaks.
+    - Text and Table items are included; Image items are excluded.
+
+    Args:
+        content_list: Full content list (MinerU-style items with page_idx, type, etc.)
+        current_item_info: Info about the current item (must have "index" key).
+        tokenizer: Tokenizer with encode/decode methods.
+        leading_tokens: Max tokens for leading text (defaults to LEADING_CONTEXT_TOKENS env).
+        trailing_tokens: Max tokens for trailing text (defaults to TRAILING_CONTEXT_TOKENS env).
+
+    Returns:
+        Tuple of (leading_text, trailing_text).
+    """
+    if leading_tokens is None:
+        leading_tokens = LEADING_CONTEXT_TOKENS
+    if trailing_tokens is None:
+        trailing_tokens = TRAILING_CONTEXT_TOKENS
+
+    current_index = current_item_info.get("index", 0)
+
+    # --- Gather leading items (before current item) ---
+    leading_parts = []
+    for i in range(0, current_index):
+        item = content_list[i]
+        text = _extract_text_from_item_for_context(item)
+        if text and text.strip():
+            leading_parts.append(text)
+
+    leading_raw = "\n\n".join(leading_parts)
+
+    # --- Gather trailing items (after current item) ---
+    trailing_parts = []
+    for i in range(current_index + 1, len(content_list)):
+        item = content_list[i]
+        text = _extract_text_from_item_for_context(item)
+        if text and text.strip():
+            trailing_parts.append(text)
+
+    trailing_raw = "\n\n".join(trailing_parts)
+
+    # --- Truncate using separator hierarchy ---
+    # Leading: keep the tail (closest to current item)
+    leading_text = _truncate_by_separators(leading_raw, leading_tokens, tokenizer, direction="tail")
+    # Trailing: keep the head (closest to current item)
+    trailing_text = _truncate_by_separators(trailing_raw, trailing_tokens, tokenizer, direction="head")
+
+    return leading_text, trailing_text
 
 
 @dataclass
@@ -461,6 +653,41 @@ class BaseModalProcessor:
         except Exception as e:
             logger.error(f"Error getting context for item {item_info}: {e}")
             return ""
+
+    def _get_leading_trailing_for_item(self, item_info: Dict[str, Any]) -> Tuple[str, str]:
+        """Get leading and trailing context separately for the current item.
+
+        Uses the content_source (content_list) to gather text/table items
+        before and after the current multimodal item, truncated to ENV-configured
+        token limits with clean separator-based breaks.
+
+        Args:
+            item_info: Information about current item (must contain "index").
+
+        Returns:
+            Tuple of (leading_text, trailing_text). Both empty if content_source
+            is not a list or item_info is missing.
+        """
+        if not self.content_source or not isinstance(self.content_source, list):
+            return "", ""
+
+        if not item_info or "index" not in item_info:
+            return "", ""
+
+        try:
+            leading, trailing = extract_leading_trailing_context(
+                content_list=self.content_source,
+                current_item_info=item_info,
+                tokenizer=self.tokenizer,
+            )
+            if leading or trailing:
+                logger.debug(
+                    f"Leading/Trailing context lengths: {len(leading)}/{len(trailing)} for item: {item_info}"
+                )
+            return leading, trailing
+        except Exception as e:
+            logger.error(f"Error extracting leading/trailing context for item {item_info}: {e}")
+            return "", ""
 
     async def generate_description_only(
         self,
@@ -924,17 +1151,19 @@ class ImageModalProcessor(BaseModalProcessor):
             if not image_path_obj.exists():
                 raise FileNotFoundError(f"Image file not found: {image_path}")
 
-            # Extract context for current item
-            context = ""
+            # Extract leading/trailing context for current item
+            leading = ""
+            trailing = ""
             if item_info:
-                context = self._get_context_for_item(item_info)
+                leading, trailing = self._get_leading_trailing_for_item(item_info)
 
             # Build detailed visual analysis prompt with context
-            if context:
+            if leading or trailing:
                 vision_prompt = PROMPTS.get(
                     "vision_prompt_with_context", PROMPTS["vision_prompt"]
                 ).format(
-                    context=context,
+                    leading=leading,
+                    trailing=trailing,
                     section_path=section_path if section_path else "None",
                     entity_name=entity_name
                     if entity_name
@@ -953,6 +1182,15 @@ class ImageModalProcessor(BaseModalProcessor):
                     captions=captions if captions else "None",
                     footnotes=footnotes if footnotes else "None",
                 )
+
+            # DEBUG: Print full reconstructed prompt
+            # logger.info("\n" + "="*70)
+            # logger.info("🔍 DEBUG: FULL IMAGE PROMPT SENT TO LLM")
+            # logger.info("="*70)
+            # logger.info(f"[SYSTEM PROMPT]:\n{PROMPTS['IMAGE_ANALYSIS_SYSTEM']}")
+            # logger.info(f"\n[USER PROMPT]:\n{vision_prompt}")
+            # logger.info(f"\n[CONTEXT USED]: {'YES' if context else 'NO'}")
+            # logger.info("="*70 + "\n")
 
             # Encode image to base64
             image_base64 = self._encode_image_to_base64(image_path)
@@ -973,17 +1211,17 @@ class ImageModalProcessor(BaseModalProcessor):
             # Parse response (reuse existing logic)
             enhanced_caption, entity_info = self._parse_response(response, entity_name)
 
-            print("\n" + "="*70)
-            print(f"🖼️  IMAGE PROCESSING RESULT")
-            print(f"  entity_name : {entity_info['entity_name']}")
-            print(f"  entity_type : {entity_info['entity_type']}")
-            print(f"  summary     : {entity_info['summary']}")
-            print(f"  img_path    : {image_path}")
-            print(f"  captions    : {captions}")
-            print(f"─"*70)
-            print(f"  CHUNK yang akan disimpan:")
-            print(enhanced_caption)
-            print("="*70 + "\n")
+            # print("\n" + "="*70)
+            # print(f"🖼️  IMAGE PROCESSING RESULT")
+            # print(f"  entity_name : {entity_info['entity_name']}")
+            # print(f"  entity_type : {entity_info['entity_type']}")
+            # print(f"  summary     : {entity_info['summary']}")
+            # print(f"  img_path    : {image_path}")
+            # print(f"  captions    : {captions}")
+            # print(f"─"*70)
+            # print(f"  CHUNK yang akan disimpan:")
+            # print(enhanced_caption)
+            # print("="*70 + "\n")
 
             return enhanced_caption, entity_info
 
@@ -1161,17 +1399,19 @@ class TableModalProcessor(BaseModalProcessor):
             table_body = format_table_body(get_table_body(content_data))
             table_footnote = normalize_caption_list(content_data.get("table_footnote"))
 
-            # Extract context for current item
-            context = ""
+            # Extract leading/trailing context for current item
+            leading = ""
+            trailing = ""
             if item_info:
-                context = self._get_context_for_item(item_info)
+                leading, trailing = self._get_leading_trailing_for_item(item_info)
 
             # Build table analysis prompt with context
-            if context:
+            if leading or trailing:
                 table_prompt = PROMPTS.get(
                     "table_prompt_with_context", PROMPTS["table_prompt"]
                 ).format(
-                    context=context,
+                    leading=leading,
+                    trailing=trailing,
                     entity_name=entity_name
                     if entity_name
                     else "descriptive name for this table",
@@ -1191,6 +1431,15 @@ class TableModalProcessor(BaseModalProcessor):
                     table_footnote=table_footnote if table_footnote else "None",
                 )
 
+            # DEBUG: Print full reconstructed prompt
+            # logger.info("\n" + "="*70)
+            # logger.info("🔍 DEBUG: FULL TABLE PROMPT SENT TO LLM")
+            # logger.info("="*70)
+            # logger.info(f"[SYSTEM PROMPT]:\n{PROMPTS['TABLE_ANALYSIS_SYSTEM']}")
+            # logger.info(f"\n[USER PROMPT]:\n{table_prompt}")
+            # logger.info(f"\n[CONTEXT USED]: {'YES' if context else 'NO'}")
+            # logger.info("="*70 + "\n")
+
             # Call LLM for table analysis
             response = await self.modal_caption_func(
                 table_prompt,
@@ -1201,19 +1450,19 @@ class TableModalProcessor(BaseModalProcessor):
             enhanced_caption, entity_info = self._parse_table_response(
                 response, entity_name
             )
-            print("\n" + "="*70)
-            print(f"📊  TABLE PROCESSING RESULT")
-            print(f"  entity_name  : {entity_info['entity_name']}")
-            print(f"  entity_type  : {entity_info['entity_type']}")
-            print(f"  summary      : {entity_info['summary']}")
-            print(f"  caption      : {table_caption}")
-            print(f"─"*70)
-            print(f"  table_body (dikirim ke LLM):")
-            print(table_body[:500])  # preview
-            print(f"─"*70)
-            print(f"  CHUNK yang akan disimpan (LLM analysis):")
-            print(enhanced_caption)
-            print("="*70 + "\n")
+            # print("\n" + "="*70)
+            # print(f"📊  TABLE PROCESSING RESULT")
+            # print(f"  entity_name  : {entity_info['entity_name']}")
+            # print(f"  entity_type  : {entity_info['entity_type']}")
+            # print(f"  summary      : {entity_info['summary']}")
+            # print(f"  caption      : {table_caption}")
+            # print(f"─"*70)
+            # print(f"  table_body (dikirim ke LLM):")
+            # print(table_body[:500])  # preview
+            # print(f"─"*70)
+            # print(f"  CHUNK yang akan disimpan (LLM analysis):")
+            # print(enhanced_caption)
+            # print("="*70 + "\n")
             return enhanced_caption, entity_info
 
         except Exception as e:
@@ -1382,17 +1631,19 @@ class EquationModalProcessor(BaseModalProcessor):
 
             equation_text, equation_format = get_equation_text_and_format(content_data)
 
-            # Extract context for current item
-            context = ""
+            # Extract leading/trailing context for current item
+            leading = ""
+            trailing = ""
             if item_info:
-                context = self._get_context_for_item(item_info)
+                leading, trailing = self._get_leading_trailing_for_item(item_info)
 
             # Build equation analysis prompt with context
-            if context:
+            if leading or trailing:
                 equation_prompt = PROMPTS.get(
                     "equation_prompt_with_context", PROMPTS["equation_prompt"]
                 ).format(
-                    context=context,
+                    leading=leading,
+                    trailing=trailing,
                     equation_text=equation_text,
                     equation_format=equation_format,
                     entity_name=entity_name

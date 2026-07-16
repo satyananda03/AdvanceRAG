@@ -135,7 +135,6 @@ def _bounded_overlap(target_max: int, chunk_overlap_token_size: int) -> int:
 # paragraph, so truncate before logging to keep the line readable.
 _HEADING_LOG_MAX_CHARS = 50
 
-
 def _heading_for_log(heading: str | None) -> str:
     """Truncate a heading to the first ``_HEADING_LOG_MAX_CHARS`` chars for logs."""
     text = heading or ""

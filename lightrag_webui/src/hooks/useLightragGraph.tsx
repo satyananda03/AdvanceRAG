@@ -12,7 +12,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { resolveNodeColor, DEFAULT_NODE_COLOR } from '@/utils/graphColor'
 
 // Every node gets this border (the node-border program reads `borderColor`).
-const NODE_BORDER_COLOR = '#FFFFFF'
+const NODE_BORDER_COLOR = '#000000'
 
 // Bounded auto-retry for transient graph fetch failures. We must NOT retry
 // without a cap (that was the original unbounded zero-backoff loop that
@@ -293,6 +293,7 @@ const createSigmaGraph = async (rawGraph: RawGraph | null): Promise<UndirectedGr
     graph.addNode(rawNode.id, {
       label: safeNodeLabel(rawNode.labels, rawNode.id),
       color: rawNode.color,
+      labelColor: rawNode.color,
       x,
       y,
       size: rawNode.size,
@@ -993,6 +994,7 @@ const useLightrangeGraph = () => {
           sigmaGraph.addNode(nodeId, {
             label: safeNodeLabel(newNode.labels, nodeId),
             color: newNode.color,
+            labelColor: newNode.color,
             x: x,
             y: y,
             size: nodeSize,
