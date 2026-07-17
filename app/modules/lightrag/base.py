@@ -395,22 +395,6 @@ class BaseKVStorage(StorageNameSpace, ABC):
     async def filter_keys(self, keys: set[str]) -> set[str]:
         """Return un-exist keys"""
 
-    async def get_keys_by_chunk_ids(self, chunk_ids: list[str]) -> list[str]:
-        """Find entry keys whose ``chunk_ids`` field overlaps with the given chunk IDs.
-
-        Used as fallback discovery during document deletion when the primary
-        per-document index (``full_entities`` / ``full_relations``) is empty or
-        incomplete.  If the index is missing, the chunk-tracking storages
-        (``entity_chunks`` / ``relation_chunks``) are the next most reliable
-        source of truth, and this method lets the deletion logic query them
-        by chunk ID instead of by entity/relation key.
-
-        Returns empty list by default — backends that don't implement this
-        simply skip the fallback, degrading to the original chunk-only deletion
-        behaviour rather than failing.
-        """
-        return []
-
     @abstractmethod
     async def upsert(self, data: dict[str, dict[str, Any]]) -> None:
         """Upsert data
@@ -750,7 +734,7 @@ class BaseGraphStorage(StorageNameSpace, ABC):
 
     @abstractmethod
     async def get_knowledge_graph(
-        self, node_label: str, max_depth: int = 3, max_nodes: int = 1000
+        self, node_label: str, max_depth: int = 3, max_nodes: int = 1000, workspace: str = None
     ) -> KnowledgeGraph:
         """
         Retrieve a connected subgraph of nodes where the label includes the specified `node_label`.
@@ -759,6 +743,7 @@ class BaseGraphStorage(StorageNameSpace, ABC):
             node_label: Label(entity name) of the starting node，* means all nodes
             max_depth: Maximum depth of the subgraph, Defaults to 3
             max_nodes: Maxiumu nodes to return, Defaults to 1000（BFS if possible)
+            workspace: Optional workspace filter to restrict graph retrieval
 
         Returns:
             KnowledgeGraph object containing nodes and edges, with an is_truncated flag

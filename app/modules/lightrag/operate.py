@@ -2056,7 +2056,6 @@ async def _merge_nodes_then_upsert(
         for dp in nodes_data:
             if dp.get("source_id"):
                 new_source_ids.extend(dp["source_id"].split(GRAPH_FIELD_SEP))
-
         existing_full_source_ids = []
         if entity_chunks_storage is not None:
             stored_chunks = await entity_chunks_storage.get_by_id(entity_name)
@@ -2098,16 +2097,20 @@ async def _merge_nodes_then_upsert(
         # 4. Only keep nodes not filter by apply_source_ids_limit if limit_method is KEEP
         if limit_method == SOURCE_IDS_LIMIT_METHOD_KEEP:
             allowed_source_ids = set(source_ids)
+            existing_full_source_ids_set = set(existing_full_source_ids)
             filtered_nodes = []
             for dp in nodes_data:
-                source_id = dp.get("source_id")
-                # Skip descriptions sourced from chunks dropped by the limitation cap
-                if (
-                    source_id
-                    and source_id not in allowed_source_ids
-                    and source_id not in existing_full_source_ids
-                ):
-                    continue
+                raw_source_id = dp.get("source_id") or ""
+                # source_id bisa berupa multi-chunk string (GRAPH_FIELD_SEP) akibat
+                # parent-child redirect. Pecah agar perbandingan terhadap set individual benar.
+                chunk_ids = [
+                    c for c in raw_source_id.split(GRAPH_FIELD_SEP) if c
+                ] if raw_source_id else []
+                if chunk_ids:
+                    # Pertahankan entry jika minimal satu child ada di allowed/existing
+                    if not (set(chunk_ids) & allowed_source_ids) and \
+                    not (set(chunk_ids) & existing_full_source_ids_set):
+                        continue
                 filtered_nodes.append(dp)
             nodes_data = filtered_nodes
         else:  # In FIFO mode, keep all nodes - truncation happens at source_ids level only
@@ -2446,16 +2449,22 @@ async def _merge_edges_then_upsert(
         # 4. Only keep edges with source_id in the final source_ids list if in KEEP mode
         if limit_method == SOURCE_IDS_LIMIT_METHOD_KEEP:
             allowed_source_ids = set(source_ids)
+            existing_full_source_ids_set = set(existing_full_source_ids)
             filtered_edges = []
             for dp in edges_data:
-                source_id = dp.get("source_id")
-                # Skip relationship fragments sourced from chunks dropped by keep oldest cap
-                if (
-                    source_id
-                    and source_id not in allowed_source_ids
-                    and source_id not in existing_full_source_ids
-                ):
-                    continue
+                raw_source_id = dp.get("source_id") or ""
+                # source_id bisa berupa multi-chunk string (GRAPH_FIELD_SEP) akibat
+                # parent-child redirect. Pecah agar perbandingan terhadap set individual benar.
+                chunk_ids = [
+                    c for c in raw_source_id.split(GRAPH_FIELD_SEP) if c
+                ] if raw_source_id else []
+                
+                if chunk_ids:
+                    # Pertahankan entry jika minimal satu child ada di allowed/existing
+                    # Skip relationship fragments sourced from chunks dropped by keep oldest cap
+                    if not (set(chunk_ids) & allowed_source_ids) and \
+                       not (set(chunk_ids) & existing_full_source_ids_set):
+                        continue
                 filtered_edges.append(dp)
             edges_data = filtered_edges
         else:  # In FIFO mode, keep all edges - truncation happens at source_ids level only

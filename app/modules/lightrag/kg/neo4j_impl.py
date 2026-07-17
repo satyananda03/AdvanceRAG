@@ -1286,6 +1286,7 @@ class Neo4JStorage(BaseGraphStorage):
         node_label: str,
         max_depth: int = 3,
         max_nodes: int = None,
+        workspace: str = None,
     ) -> KnowledgeGraph:
         """
         Retrieve a connected subgraph of nodes where the label includes the specified `node_label`.
@@ -1306,10 +1307,12 @@ class Neo4JStorage(BaseGraphStorage):
             # Limit max_nodes to not exceed global_config max_graph_nodes
             max_nodes = min(max_nodes, self.global_config.get("max_graph_nodes", 1000))
 
-        workspace_label = self._get_workspace_label()
+        active_workspace = workspace.strip() if workspace else self.workspace.strip()
+        active_workspace = active_workspace if active_workspace else "base"
+        workspace_label = active_workspace.replace("`", "``")
         # Raw (un-escaped) label bound as a query parameter for APOC labelFilter,
         # which lives inside a Cypher string literal and must not be interpolated.
-        workspace_label_raw = self._get_raw_workspace_label()
+        workspace_label_raw = active_workspace
         result = KnowledgeGraph()
         seen_nodes = set()
         seen_edges = set()

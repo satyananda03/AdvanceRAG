@@ -2970,52 +2970,6 @@ class PGKVStorage(BaseKVStorage):
             )
             raise
 
-    async def get_keys_by_chunk_ids(self, chunk_ids: list[str]) -> list[str]:
-        """Find keys in chunk-tracking tables whose ``chunk_ids`` JSONB array
-        overlaps with the given chunk IDs.
-
-        Only applies to ``entity_chunks`` and ``relation_chunks`` namespaces;
-        returns an empty list for all other namespaces.  Uses the PostgreSQL
-        JSONB ``?|`` operator (array-overlap test) so the scan is workspace-
-        scoped and avoids a Python-side filter over the full table.
-
-        Graceful degradation: any error is logged and an empty list is
-        returned so that the deletion fallback degrades to the original
-        chunk-only behaviour instead of failing the whole delete.
-        """
-        if not chunk_ids:
-            return []
-
-        if not (
-            is_namespace(self.namespace, NameSpace.KV_STORE_ENTITY_CHUNKS)
-            or is_namespace(self.namespace, NameSpace.KV_STORE_RELATION_CHUNKS)
-        ):
-            return []
-
-        table_name = namespace_to_table_name(self.namespace)
-        if not table_name:
-            logger.error(
-                f"[{self.workspace}] Unknown namespace for chunk-id lookup: {self.namespace}"
-            )
-            return []
-
-        sql = (
-            f"SELECT id FROM {table_name} "
-            f"WHERE workspace=$1 AND chunk_ids ?| $2::text[]"
-        )
-        params = {"workspace": self.workspace, "ids": chunk_ids}
-        try:
-            res = await self.db.query(sql, list(params.values()), multirows=True)
-            if res:
-                return [row["id"] for row in res]
-            return []
-        except Exception as e:
-            logger.error(
-                f"[{self.workspace}] get_keys_by_chunk_ids failed for "
-                f"{self.namespace},\nsql:{sql},\nparams:{params},\nerror:{e}"
-            )
-            return []
-
     ################ INSERT METHODS ################
     async def upsert(self, data: dict[str, dict[str, Any]]) -> None:
         logger.debug(f"[{self.workspace}] Inserting {len(data)} to {self.namespace}")
@@ -7493,7 +7447,7 @@ class PGGraphStorage(BaseGraphStorage):
         return labels
 
     async def _bfs_subgraph(
-        self, node_label: str, max_depth: int, max_nodes: int
+        self, graph_name: str, node_label: str, max_depth: int, max_nodes: int
     ) -> KnowledgeGraph:
         """
         Implements a true breadth-first search algorithm for subgraph retrieval.
@@ -7523,7 +7477,7 @@ class PGGraphStorage(BaseGraphStorage):
         cypher_query = f"""MATCH (n:base {{entity_id: "{label}"}})
                     RETURN id(n) as node_id, n"""
 
-        query = f"SELECT * FROM cypher({_dollar_quote(self.graph_name)}, {_dollar_quote(cypher_query)}) AS (node_id bigint, n agtype)"
+        query = f"SELECT * FROM cypher({_dollar_quote(graph_name)}, {_dollar_quote(cypher_query)}) AS (node_id bigint, n agtype)"
 
         node_result = await self._query(query)
         if not node_result or not node_result[0].get("n"):
@@ -7705,6 +7659,7 @@ class PGGraphStorage(BaseGraphStorage):
         node_label: str,
         max_depth: int = 3,
         max_nodes: int = None,
+        workspace: str = None,
     ) -> KnowledgeGraph:
         """
         Retrieve a connected subgraph of nodes where the label includes the specified `node_label`.
@@ -7724,12 +7679,23 @@ class PGGraphStorage(BaseGraphStorage):
         else:
             # Limit max_nodes to not exceed global_config max_graph_nodes
             max_nodes = min(max_nodes, self.global_config.get("max_graph_nodes", 1000))
+        graph_name = self.graph_name
+        active_workspace = self.workspace
+        if workspace:
+            safe_workspace = __import__('re').sub(r"[^a-zA-Z0-9_]", "_", workspace.strip())
+            safe_namespace = __import__('re').sub(r"[^a-zA-Z0-9_]", "_", self.namespace)
+            graph_name = f"{safe_workspace}_{safe_namespace}"
+            if workspace.strip().lower() == "default":
+                graph_name = safe_namespace
+            active_workspace = workspace
+
+
         kg = KnowledgeGraph()
 
         # Handle wildcard query - get all nodes
         if node_label == "*":
             # First check total node count to determine if graph should be truncated
-            count_query = f"""SELECT * FROM cypher('{self.graph_name}', $$
+            count_query = f"""SELECT * FROM cypher('{graph_name}', $$
                     MATCH (n:base)
                     RETURN count(distinct n) AS total_nodes
                     $$) AS (total_nodes bigint)"""
@@ -7749,14 +7715,14 @@ class PGGraphStorage(BaseGraphStorage):
                 WITH node_degrees AS (
                     SELECT node_id, COUNT(*) AS degree
                     FROM (
-                        SELECT start_id AS node_id FROM {self.graph_name}._ag_label_edge
+                        SELECT start_id AS node_id FROM {graph_name}._ag_label_edge
                         UNION ALL
-                        SELECT end_id AS node_id FROM {self.graph_name}._ag_label_edge
+                        SELECT end_id AS node_id FROM {graph_name}._ag_label_edge
                     ) AS all_edges
                     GROUP BY node_id
                 )
                 SELECT v.id AS node_id, COALESCE(d.degree, 0) AS degree
-                FROM {self.graph_name}.base v
+                FROM {graph_name}.base v
                 LEFT JOIN node_degrees d ON d.node_id = v.id
                 ORDER BY degree DESC, v.id ASC
                 LIMIT $1"""
@@ -7765,13 +7731,13 @@ class PGGraphStorage(BaseGraphStorage):
             node_ids = [str(result["node_id"]) for result in node_results]
 
             logger.info(
-                f"[{self.workspace}] Total nodes: {total_nodes}, Selected nodes: {len(node_ids)}"
+                f"[{active_workspace}] Total nodes: {total_nodes}, Selected nodes: {len(node_ids)}"
             )
 
             if node_ids:
                 formatted_ids = ", ".join(node_ids)
                 # Construct batch query for subgraph within max_nodes
-                query = f"""SELECT * FROM cypher('{self.graph_name}', $$
+                query = f"""SELECT * FROM cypher('{graph_name}', $$
                         WITH [{formatted_ids}] AS node_ids
                         MATCH (a)
                         WHERE id(a) IN node_ids
@@ -7827,16 +7793,16 @@ class PGGraphStorage(BaseGraphStorage):
                 )
             else:
                 # For single node query, use BFS algorithm
-                kg = await self._bfs_subgraph(node_label, max_depth, max_nodes)
+                kg = await self._bfs_subgraph(graph_name, node_label, max_depth, max_nodes)
 
             logger.info(
-                f"[{self.workspace}] Subgraph query successful | Node count: {len(kg.nodes)} | Edge count: {len(kg.edges)}"
+                f"[{active_workspace}] Subgraph query successful | Node count: {len(kg.nodes)} | Edge count: {len(kg.edges)}"
             )
         else:
             # For non-wildcard queries, use the BFS algorithm
-            kg = await self._bfs_subgraph(node_label, max_depth, max_nodes)
+            kg = await self._bfs_subgraph(graph_name, node_label, max_depth, max_nodes)
             logger.info(
-                f"[{self.workspace}] Subgraph query for '{node_label}' successful | Node count: {len(kg.nodes)} | Edge count: {len(kg.edges)}"
+                f"[{active_workspace}] Subgraph query for '{node_label}' successful | Node count: {len(kg.nodes)} | Edge count: {len(kg.edges)}"
             )
 
         return kg

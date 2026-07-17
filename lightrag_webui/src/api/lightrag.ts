@@ -433,6 +433,15 @@ axiosInstance.interceptors.request.use((config) => {
   if (apiKey) {
     config.headers['X-API-Key'] = apiKey
   }
+
+  // Attach selected workspace header so the backend scopes the graph data
+  const selectedWorkspace = useSettingsStore.getState().selectedWorkspace
+  if (selectedWorkspace) {
+    config.headers['LIGHTRAG-WORKSPACE'] = selectedWorkspace
+  } else {
+    delete config.headers['LIGHTRAG-WORKSPACE']
+  }
+
   return config
 })
 
@@ -552,6 +561,11 @@ export const getPopularLabels = async (limit: number = popularLabelsDefaultLimit
 
 export const searchLabels = async (query: string, limit: number = searchLabelsDefaultLimit): Promise<string[]> => {
   const response = await axiosInstance.get(`/graph/label/search?q=${encodeURIComponent(query)}&limit=${limit}`)
+  return response.data
+}
+
+export const getWorkspaces = async (): Promise<string[]> => {
+  const response = await axiosInstance.get('/graph/workspaces')
   return response.data
 }
 

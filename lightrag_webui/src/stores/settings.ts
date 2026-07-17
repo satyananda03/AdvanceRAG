@@ -6,7 +6,8 @@ import { Message, QueryRequest } from '@/api/lightrag'
 
 type Theme = 'dark' | 'light' | 'system'
 type Language = 'en' | 'zh' | 'fr' | 'ar' | 'zh_TW' | 'ru' | 'ja' | 'de' | 'uk' | 'ko' | 'vi'
-type Tab = 'documents' | 'knowledge-graph' | 'retrieval' | 'api'
+type Tab = 'documents' | 'knowledge-graph'
+// | 'retrieval' | 'api'
 
 interface SettingsState {
   // Document manager settings
@@ -79,6 +80,11 @@ interface SettingsState {
   // Search label dropdown refresh trigger (non-persistent, runtime only)
   searchLabelDropdownRefreshTrigger: number
   triggerSearchLabelDropdownRefresh: () => void
+
+  // Currently selected workspace for graph filtering (non-persistent, runtime only)
+  // Empty string means "all workspaces" (no workspace filter applied)
+  selectedWorkspace: string
+  setSelectedWorkspace: (workspace: string) => void
 }
 
 const useSettingsStoreBase = create<SettingsState>()(
@@ -224,7 +230,11 @@ const useSettingsStoreBase = create<SettingsState>()(
       triggerSearchLabelDropdownRefresh: () =>
         set((state) => ({
           searchLabelDropdownRefreshTrigger: state.searchLabelDropdownRefreshTrigger + 1
-        }))
+        })),
+
+      // Selected workspace for graph filtering (not persisted, resets on reload)
+      selectedWorkspace: '',
+      setSelectedWorkspace: (workspace: string) => set({ selectedWorkspace: workspace })
     }),
     {
       name: 'settings-storage',

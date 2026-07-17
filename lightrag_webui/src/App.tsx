@@ -15,6 +15,7 @@ import GraphViewer from '@/features/GraphViewer'
 import DocumentManager from '@/features/DocumentManager'
 import RetrievalView from '@/features/RetrievalView'
 import ApiSite from '@/features/ApiSite'
+import WorkspaceDropdown from '@/components/graph/WorkspaceDropdown'
 
 import { Tabs, TabsContent } from '@/components/ui/Tabs'
 
@@ -211,6 +212,7 @@ function App() {
                 </TabsContent>
                 <TabsContent value="knowledge-graph" className="absolute top-0 right-0 bottom-0 left-0 overflow-hidden">
                   <GraphViewer />
+                  <WorkspaceDropdown />
                 </TabsContent>
                 <TabsContent value="retrieval" className="absolute top-0 right-0 bottom-0 left-0 overflow-hidden">
                   <RetrievalView />

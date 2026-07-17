@@ -131,7 +131,6 @@ from lightrag.utils import (
     make_relation_vdb_ids,
     subtract_source_ids,
     make_relation_chunk_key,
-    parse_relation_chunk_key,
     normalize_source_ids_limit_method,
     normalize_string_list,
 )
@@ -273,16 +272,16 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
     # Storage
     # ---
 
-    kv_storage: str = field(default="PGKVStorage")
+    kv_storage: str = field(default="JsonKVStorage")
     """Storage backend for key-value data."""
 
-    vector_storage: str = field(default="PGVectorStorage")
+    vector_storage: str = field(default="NanoVectorDBStorage")
     """Storage backend for vector embeddings."""
 
     graph_storage: str = field(default="NetworkXStorage")
     """Storage backend for knowledge graphs."""
 
-    doc_status_storage: str = field(default="PGDocStatusStorage")
+    doc_status_storage: str = field(default="JsonDocStatusStorage")
     """Storage type for tracking document processing statuses."""
 
     # Workspace
@@ -1366,6 +1365,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
         node_label: str,
         max_depth: int = 3,
         max_nodes: int = None,
+        workspace: str = None,
     ) -> KnowledgeGraph:
         """Get knowledge graph for a given label
 
@@ -1373,6 +1373,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
             node_label (str): Label to get knowledge graph for
             max_depth (int): Maximum depth of graph
             max_nodes (int, optional): Maximum number of nodes to return. Defaults to self.max_graph_nodes.
+            workspace (str, optional): Workspace to filter graph data.
 
         Returns:
             KnowledgeGraph: Knowledge graph containing nodes and edges
@@ -1385,7 +1386,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
             max_nodes = min(max_nodes, self.max_graph_nodes)
 
         return await self.chunk_entity_relation_graph.get_knowledge_graph(
-            node_label, max_depth, max_nodes
+            node_label, max_depth, max_nodes, workspace=workspace
         )
 
     def insert(
@@ -2689,106 +2690,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
 
         # Return the dictionary containing statuses only for the found document IDs
         return found_statuses
-    # ============== PREVENT ORPHAN =======================#
-    async def _discover_orphaned_entities_and_relations(
-        self, chunk_ids: list[str]
-    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-        """Fallback discovery of entities and relations referencing ``chunk_ids``.
 
-        When the primary per-document index (``full_entities`` /
-        ``full_relations``) is empty or incomplete, this method queries the
-        chunk-tracking storages (``entity_chunks`` / ``relation_chunks``) for
-        entries whose ``chunk_ids`` array overlaps with the provided
-        ``chunk_ids``.  For each match it fetches the corresponding graph
-        node/edge so the existing classification logic can process it
-        identically to entities/relations discovered via the primary index.
-
-        The returned ``orphaned_nodes`` / ``orphaned_edges`` have the same
-        structure as the ``affected_nodes`` / ``affected_edges`` lists built
-        from ``full_entities`` / ``full_relations`` — each item is a node/edge
-        property dict with ``entity_id`` / ``source`` / ``target`` / ``source_id``
-        keys populated as needed by the caller.
-
-        All errors are caught and logged as warnings so the deletion still
-        proceeds (degrading to the original chunk-only behaviour) rather than
-        failing the whole operation.
-        """
-        if not chunk_ids:
-            return [], []
-
-        orphaned_nodes: list[dict[str, Any]] = []
-        orphaned_edges: list[dict[str, Any]] = []
-
-        # --- Discover orphaned entities ---
-        if self.entity_chunks:
-            try:
-                entity_keys = await self.entity_chunks.get_keys_by_chunk_ids(
-                    chunk_ids
-                )
-                if entity_keys:
-                    nodes_dict = await self.chunk_entity_relation_graph.get_nodes_batch(
-                        entity_keys
-                    )
-                    for entity_name in entity_keys:
-                        node_data = nodes_dict.get(entity_name)
-                        if node_data:
-                            # Ensure compatibility with existing logic that expects "id" field
-                            if "id" not in node_data:
-                                node_data["id"] = entity_name
-                            orphaned_nodes.append(node_data)
-                    logger.info(
-                        f"[fallback] Discovered {len(orphaned_nodes)} orphaned "
-                        f"entities from entity_chunks tracking"
-                    )
-            except Exception as e:
-                logger.warning(
-                    f"[fallback] Failed to discover orphaned entities: {e}"
-                )
-
-        # --- Discover orphaned relations ---
-        if self.relation_chunks:
-            try:
-                relation_keys = await self.relation_chunks.get_keys_by_chunk_ids(
-                    chunk_ids
-                )
-                if relation_keys:
-                    edge_pairs_dicts: list[dict[str, str]] = []
-                    pairs_list: list[tuple[str, str]] = []
-                    for key in relation_keys:
-                        try:
-                            src, tgt = parse_relation_chunk_key(key)
-                        except Exception:
-                            logger.warning(
-                                f"[fallback] Failed to parse relation chunk key: {key}"
-                            )
-                            continue
-                        edge_pairs_dicts.append({"src": src, "tgt": tgt})
-                        pairs_list.append((src, tgt))
-
-                    if edge_pairs_dicts:
-                        edges_dict = await self.chunk_entity_relation_graph.get_edges_batch(
-                            edge_pairs_dicts
-                        )
-                        for src, tgt in pairs_list:
-                            edge_data = edges_dict.get((src, tgt))
-                            if edge_data:
-                                # Ensure compatibility with existing logic that expects "source" and "target" fields
-                                if "source" not in edge_data:
-                                    edge_data["source"] = src
-                                if "target" not in edge_data:
-                                    edge_data["target"] = tgt
-                                orphaned_edges.append(edge_data)
-                        logger.info(
-                            f"[fallback] Discovered {len(orphaned_edges)} orphaned "
-                            f"relations from relation_chunks tracking"
-                        )
-            except Exception as e:
-                logger.warning(
-                    f"[fallback] Failed to discover orphaned relations: {e}"
-                )
-
-        return orphaned_nodes, orphaned_edges
-    # ============== PREVENT ORPHAN =======================#
     async def _purge_doc_chunks_and_kg(
         self,
         doc_id: str,
@@ -2897,27 +2799,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
                 f"[purge] Failed to analyze affected graph elements for {doc_id}: {e}"
             )
             raise Exception(f"Failed to analyze graph dependencies: {e}") from e
-        # ============== PREVENT ORPHAN =======================#
-        # ---- 1b. Fallback: discover orphaned entities/relations when the
-        #         per-document index (full_entities/full_relations) is empty or
-        #         incomplete.  The chunk-tracking storages are written earlier
-        #         in the ingestion pipeline, so they are a reliable fallback.
-        #         The discovered nodes/edges are appended to the same
-        #         affected_nodes/affected_edges lists, so the existing
-        #         classification logic below processes them identically. ----
-        if not affected_nodes and not affected_edges and chunk_ids:
-            orphaned_nodes, orphaned_edges = (
-                await self._discover_orphaned_entities_and_relations(chunk_ids)
-            )
-            affected_nodes.extend(orphaned_nodes)
-            affected_edges.extend(orphaned_edges)
-            if orphaned_nodes or orphaned_edges:
-                logger.info(
-                    f"[purge] {doc_id}: fallback discovered "
-                    f"{len(orphaned_nodes)} entities, "
-                    f"{len(orphaned_edges)} relations for cleanup"
-                )
-        # ============== PREVENT ORPHAN =======================#
+
         # ---- 2. Classify entities/relations into delete vs rebuild ----
         try:
             for node_data in affected_nodes:
@@ -3610,30 +3492,7 @@ class LightRAG(_RoleLLMMixin, _StorageMigrationMixin, _PipelineMixin):
             except Exception as e:
                 logger.error(f"Failed to analyze affected graph elements: {e}")
                 raise Exception(f"Failed to analyze graph dependencies: {e}") from e
-            # ============== PREVENT ORPHAN =======================#
-            # ---- 4b. Fallback: discover orphaned entities/relations when the
-            #          per-document index (full_entities/full_relations) is empty
-            #          or incomplete.  The chunk-tracking storages are written
-            #          earlier in the ingestion pipeline, so they are a reliable
-            #          fallback.  Discovered nodes/edges are appended to the
-            #          same affected_nodes/affected_edges lists so the existing
-            #          classification logic below processes them identically. ----
-            if not affected_nodes and not affected_edges and chunk_ids:
-                orphaned_nodes, orphaned_edges = (
-                    await self._discover_orphaned_entities_and_relations(chunk_ids)
-                )
-                affected_nodes.extend(orphaned_nodes)
-                affected_edges.extend(orphaned_edges)
-                if orphaned_nodes or orphaned_edges:
-                    log_message = (
-                        f"Fallback discovered {len(orphaned_nodes)} entities, "
-                        f"{len(orphaned_edges)} relations for cleanup"
-                    )
-                    logger.info(log_message)
-                    async with pipeline_status_lock:
-                        pipeline_status["latest_message"] = log_message
-                        pipeline_status["history_messages"].append(log_message)
-            # ============== PREVENT ORPHAN =======================#
+
             try:
                 # Process entities
                 for node_data in affected_nodes:

@@ -4,7 +4,7 @@ This module contains all graph-related routes for the LightRAG API.
 
 from typing import Optional, Dict, Any
 import traceback
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException, Request
 from pydantic import BaseModel, Field, field_validator
 
 from lightrag.base import DeletionResult
@@ -118,6 +118,39 @@ def create_graph_routes(rag, api_key: Optional[str] = None):
 
     combined_auth = get_combined_auth_dependency(api_key)
 
+    @router.get("/graph/workspaces", dependencies=[Depends(combined_auth)])
+    async def get_graph_workspaces():
+        """
+        Get distinct workspace names from lightrag_doc_full table.
+
+        Reads the workspace column from the document storage table and returns
+        a sorted list of unique, non-empty workspace identifiers. Used by the
+        WebUI to populate the workspace filter dropdown on the Knowledge Graph page.
+
+        Returns:
+            List[str]: Sorted list of distinct workspace names.
+        """
+        try:
+            db = getattr(getattr(rag, "doc_status", None), "db", None)
+            if db is None:
+                return []
+            rows = await db.query(
+                """
+                SELECT DISTINCT workspace
+                FROM lightrag_doc_full
+                WHERE workspace IS NOT NULL AND workspace != ''
+                ORDER BY workspace
+                """,
+                multirows=True,
+            )
+            return [row["workspace"] for row in rows] if rows else []
+        except Exception as e:
+            logger.error(f"Error getting graph workspaces: {str(e)}")
+            logger.error(traceback.format_exc())
+            raise HTTPException(
+                status_code=500, detail=f"Error getting graph workspaces: {str(e)}"
+            )
+
     @router.get("/graph/label/list", dependencies=[Depends(combined_auth)])
     async def get_graph_labels():
         """
@@ -187,9 +220,10 @@ def create_graph_routes(rag, api_key: Optional[str] = None):
 
     @router.get("/graphs", dependencies=[Depends(combined_auth)])
     async def get_knowledge_graph(
+        request: Request,
         label: str = Query(..., description="Label to get knowledge graph for"),
         max_depth: int = Query(3, description="Maximum depth of graph", ge=1),
-        max_nodes: int = Query(1000, description="Maximum nodes to return", ge=1),
+        max_nodes: int = Query(2000, description="Maximum nodes to return", ge=1),
     ):
         """
         Retrieve a connected subgraph of nodes where the label includes the specified label.
@@ -206,15 +240,17 @@ def create_graph_routes(rag, api_key: Optional[str] = None):
             Dict[str, List[str]]: Knowledge graph for label
         """
         try:
+            workspace = request.headers.get("LIGHTRAG-WORKSPACE", "").strip() or None
             # Log the label parameter to check for leading spaces
             logger.debug(
-                f"get_knowledge_graph called with label: '{label}' (length: {len(label)}, repr: {repr(label)})"
+                f"get_knowledge_graph called with label: '{label}' (length: {len(label)}, repr: {repr(label)}), workspace: {workspace}"
             )
 
             return await rag.get_knowledge_graph(
                 node_label=label,
                 max_depth=max_depth,
                 max_nodes=max_nodes,
+                workspace=workspace,
             )
         except Exception as e:
             logger.error(f"Error getting knowledge graph for label '{label}': {str(e)}")

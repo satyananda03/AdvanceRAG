@@ -1298,7 +1298,7 @@ def create_app(args):
                 )
 
     base_description = (
-        ""
+        "MajaAI"
     )
     swagger_description = (
         base_description
@@ -1312,7 +1312,7 @@ def create_app(args):
     webui_path = WEBUI_PATH
 
     app_kwargs = {
-        "title": "MajaAI Backend API",
+        "title": "MajaAI API",
         "description": swagger_description,
         "version": __api_version__,
         "openapi_url": "/openapi.json",
@@ -2298,9 +2298,13 @@ def create_app(args):
             default_workspace = get_default_workspace()
             if workspace is None:
                 workspace = default_workspace
-            pipeline_status = await get_namespace_data(
-                "pipeline_status", workspace=workspace
-            )
+            try:
+                pipeline_status = await get_namespace_data(
+                    "pipeline_status", workspace=workspace
+                )
+            except (ValueError, KeyError):
+                # If the pipeline status hasn't been initialized yet for this workspace, default to empty
+                pipeline_status = {}
 
             pipeline_busy = bool(pipeline_status.get("busy", False))
             pipeline_scanning = bool(pipeline_status.get("scanning", False))

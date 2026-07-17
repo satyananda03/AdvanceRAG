@@ -43,12 +43,6 @@ function TabsNavigation() {
         <NavigationTab value="knowledge-graph" currentTab={currentTab}>
           {t('header.knowledgeGraph')}
         </NavigationTab>
-        <NavigationTab value="retrieval" currentTab={currentTab}>
-          {t('header.retrieval')}
-        </NavigationTab>
-        <NavigationTab value="api" currentTab={currentTab}>
-          {t('header.api')}
-        </NavigationTab>
       </TabsList>
     </div>
   )
@@ -56,7 +50,7 @@ function TabsNavigation() {
 
 export default function SiteHeader() {
   const { t } = useTranslation()
-  const { isGuestMode, coreVersion, apiVersion, username, webuiTitle, webuiDescription } = useAuthStore()
+  const { isGuestMode, username, webuiTitle, webuiDescription } = useAuthStore()
 
 
   const handleLogout = () => {
